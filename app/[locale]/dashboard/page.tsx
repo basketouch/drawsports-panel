@@ -37,11 +37,15 @@ export default async function DashboardPage({
     redirect(`/${locale}/login`);
   }
 
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from("profiles")
     .select("email, is_pro, subscription_start, subscription_end, organization_id")
     .eq("id", user.id)
-    .single();
+    .maybeSingle();
+
+  if (profileError) {
+    console.error("[Dashboard] profiles fetch error:", profileError);
+  }
 
   const email = profile?.email ?? user.email ?? "";
   const isPro = profile?.is_pro ?? false;
