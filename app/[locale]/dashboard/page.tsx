@@ -169,16 +169,13 @@ export default async function DashboardPage({
                   <div>
                     <p className="text-drawsports-text-muted text-xs">{t["dashboard.end"]}</p>
                     <p className="text-white font-medium">{formatDate(subscriptionEnd, locale)}</p>
-                    {isPro && !isExpired && daysLeft > 0 && (
-                      <p className="text-drawsports-primary text-sm font-medium mt-0.5">
-                        {daysLeft} {t["dashboard.daysLeft"]}
-                      </p>
-                    )}
-                    {isExpired && (
-                      <p className="text-drawsports-primary text-sm font-medium mt-0.5">
-                        {t["dashboard.expired"]}
-                      </p>
-                    )}
+                    <p className="text-drawsports-primary text-sm font-medium mt-1">
+                      {isExpired
+                        ? t["dashboard.expired"]
+                        : daysLeft === 0
+                          ? t["dashboard.expiresToday"]
+                          : `${daysLeft} ${t["dashboard.daysLeft"]}`}
+                    </p>
                   </div>
                 </div>
               )}
