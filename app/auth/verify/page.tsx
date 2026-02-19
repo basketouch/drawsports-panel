@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { createClient } from "@/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-export default function AuthVerifyPage() {
+function AuthVerifyContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
@@ -84,5 +84,24 @@ export default function AuthVerifyPage() {
         <p className="text-drawsports-text-muted">Setting up your account…</p>
       </div>
     </div>
+  );
+}
+
+function AuthVerifyFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-[#1a0f0f] px-4">
+      <div className="text-center">
+        <div className="animate-spin w-10 h-10 border-2 border-drawsports-primary border-t-transparent rounded-full mx-auto mb-4" />
+        <p className="text-drawsports-text-muted">Loading…</p>
+      </div>
+    </div>
+  );
+}
+
+export default function AuthVerifyPage() {
+  return (
+    <Suspense fallback={<AuthVerifyFallback />}>
+      <AuthVerifyContent />
+    </Suspense>
   );
 }
