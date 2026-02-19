@@ -125,31 +125,31 @@ export default async function DashboardPage({
           </div>
         </div>
 
-        {/* Grid de cards */}
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
+        {/* Grid de cards: Plan, Equipo, Fechas - 3 columnas en desktop */}
+        <div className={`grid gap-6 mb-8 ${isPro && orgName ? "md:grid-cols-3" : "md:grid-cols-2"}`}>
           {/* Plan */}
-          <div className="bg-drawsports-bg-card rounded-2xl border border-white/5 shadow-drawsports-card p-6">
+          <div className="bg-drawsports-bg-card rounded-2xl border border-white/5 shadow-drawsports-card p-6 min-h-[180px] flex flex-col">
             <h3 className="text-drawsports-text-muted text-sm font-medium uppercase tracking-wider mb-4">
               {t["dashboard.plan"]}
             </h3>
             <p className="text-xl font-bold text-white">DrawSports PRO</p>
-            <p className="text-drawsports-text-muted text-sm mt-1">
+            <p className="text-drawsports-text-muted text-sm mt-1 flex-1">
               {isPro ? t["dashboard.pro.desc"] : t["dashboard.pro.desc.inactive"]}
             </p>
           </div>
 
           {/* Equipo (owners y members) */}
-          {isPro && orgName && (
-            <div className="bg-drawsports-bg-card rounded-2xl border border-white/5 shadow-drawsports-card p-6">
+          {isPro && orgName ? (
+            <div className="bg-drawsports-bg-card rounded-2xl border border-white/5 shadow-drawsports-card p-6 min-h-[180px] flex flex-col">
               <h3 className="text-drawsports-text-muted text-sm font-medium uppercase tracking-wider mb-4">
                 {t["dashboard.team"]}
               </h3>
-              <p className="text-white font-medium">{orgName}</p>
+              <p className="text-white font-medium flex-1">{orgName}</p>
             </div>
-          )}
+          ) : null}
 
           {/* Fechas */}
-          <div className="bg-drawsports-bg-card rounded-2xl border border-white/5 shadow-drawsports-card p-6">
+          <div className="bg-drawsports-bg-card rounded-2xl border border-white/5 shadow-drawsports-card p-6 min-h-[180px] flex flex-col">
             <h3 className="text-drawsports-text-muted text-sm font-medium uppercase tracking-wider mb-4">
               {t["dashboard.dates"]}
             </h3>
