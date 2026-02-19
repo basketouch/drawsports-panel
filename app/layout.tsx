@@ -4,6 +4,10 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "DrawSports PRO - Panel de licencias",
   description: "Gestiona tu licencia DrawSports PRO",
+  icons: {
+    icon: "/imagenes/logo.png",
+    apple: "/imagenes/logo.png",
+  },
 };
 
 export default function RootLayout({
