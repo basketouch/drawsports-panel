@@ -64,6 +64,7 @@ export const translations = {
     "dashboard.manageTeam.owner": "Administrador",
     "dashboard.manageTeam.member": "Miembro",
     "dashboard.manageTeam.placeholder": "email@ejemplo.com",
+    "dashboard.manageTeam.inviteSent": "Invitación enviada. El usuario recibirá un email para registrarse.",
   },
   en: {
     // Landing
@@ -130,6 +131,7 @@ export const translations = {
     "dashboard.manageTeam.owner": "Admin",
     "dashboard.manageTeam.member": "Member",
     "dashboard.manageTeam.placeholder": "email@example.com",
+    "dashboard.manageTeam.inviteSent": "Invitation sent. The user will receive an email to sign up.",
   },
 } as const;
 

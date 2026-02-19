@@ -34,9 +34,8 @@ export function ManageTeam({
     setMessage(null);
 
     const supabase = createClient();
-    const { data, error } = await supabase.rpc("add_organization_member", {
-      org_id: orgId,
-      member_email: trimmed,
+    const { data, error } = await supabase.functions.invoke("invite-org-member", {
+      body: { org_id: orgId, email: trimmed },
     });
 
     setLoading(false);
@@ -47,9 +46,10 @@ export function ManageTeam({
       return;
     }
 
-    const result = data as { success: boolean; error?: string };
+    const result = data as { success: boolean; error?: string; invited?: boolean };
     if (result.success) {
-      setMessage({ type: "success", text: locale === "es" ? "Miembro añadido correctamente" : "Member added successfully" });
+      const msg = result.invited ? t["dashboard.manageTeam.inviteSent"] : (locale === "es" ? "Miembro añadido correctamente" : "Member added successfully");
+      setMessage({ type: "success", text: msg });
       window.location.reload();
     } else {
       setMessage({ type: "error", text: result.error || "Error" });
