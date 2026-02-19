@@ -46,12 +46,12 @@ export function ManageTeam({
     }
     try {
       const res = await fetch(`${supabaseUrl}/functions/v1/update-org`, {
-        method: "PATCH",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${session.access_token}`,
         },
-        body: JSON.stringify({ org_id: orgId, name: orgNameEdit.trim() }),
+        body: JSON.stringify({ org_id: orgId, name: orgNameEdit.trim(), action: "update" }),
       });
       const result = (await res.json().catch(() => ({}))) as { success?: boolean; error?: string };
       setSavingName(false);
