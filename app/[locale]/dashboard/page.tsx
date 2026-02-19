@@ -44,26 +44,32 @@ export default async function DashboardPage({
     .eq("id", user.id)
     .maybeSingle();
 
-  let org: { seats_limit: number } | null = null;
+  let org: { seats_limit: number; name: string } | null = null;
   let orgMembers: { email: string; organization_role: string }[] = [];
+  let orgName: string | null = null;
 
-  if (profile?.organization_id && profile?.organization_role === "owner") {
+  if (profile?.organization_id) {
     const { data: orgData } = await supabase
       .from("organizations")
-      .select("seats_limit")
+      .select("seats_limit, name")
       .eq("id", profile.organization_id)
       .single();
-    org = orgData ?? null;
+    orgName = orgData?.name ?? null;
 
-    const { data: membersData } = await supabase
-      .from("profiles")
-      .select("email, organization_role")
-      .eq("organization_id", profile.organization_id);
-    orgMembers = (membersData ?? []).map((m) => ({
-      email: m.email ?? "",
-      organization_role: m.organization_role ?? "member",
-    }));
+    if (profile.organization_role === "owner") {
+      org = orgData ? { seats_limit: orgData.seats_limit, name: orgData.name ?? "Mi equipo" } : null;
+      const { data: membersData } = await supabase
+        .from("profiles")
+        .select("email, organization_role")
+        .eq("organization_id", profile.organization_id);
+      orgMembers = (membersData ?? []).map((m) => ({
+        email: m.email ?? "",
+        organization_role: m.organization_role ?? "member",
+      }));
+    }
   }
+
+  const isMember = profile?.organization_role === "member";
 
   if (profileError) {
     console.error("[Dashboard] profiles fetch error:", profileError);
@@ -132,6 +138,16 @@ export default async function DashboardPage({
             </p>
           </div>
 
+          {/* Equipo (owners y members) */}
+          {isPro && orgName && (
+            <div className="bg-drawsports-bg-card rounded-2xl border border-white/5 shadow-drawsports-card p-6">
+              <h3 className="text-drawsports-text-muted text-sm font-medium uppercase tracking-wider mb-4">
+                {t["dashboard.team"]}
+              </h3>
+              <p className="text-white font-medium">{orgName}</p>
+            </div>
+          )}
+
           {/* Fechas */}
           <div className="bg-drawsports-bg-card rounded-2xl border border-white/5 shadow-drawsports-card p-6">
             <h3 className="text-drawsports-text-muted text-sm font-medium uppercase tracking-wider mb-4">
@@ -182,6 +198,7 @@ export default async function DashboardPage({
         {org && profile?.organization_id && (
           <ManageTeam
             orgId={profile.organization_id}
+            orgName={org.name}
             seatsLimit={org.seats_limit}
             members={orgMembers}
             locale={locale as Locale}
@@ -189,28 +206,30 @@ export default async function DashboardPage({
           />
         )}
 
-        {/* Planes de compra - primero */}
-        <div className="bg-drawsports-bg-card rounded-2xl border border-white/5 shadow-drawsports-card p-6 mb-8">
-          <h3 className="text-drawsports-text-muted text-sm font-medium uppercase tracking-wider mb-4">
-            {t["dashboard.choosePlan"]}
-          </h3>
-          <div className="grid sm:grid-cols-3 gap-4">
-            {LEMON_SQUEEZY_VARIANTS.map((variant) => (
-              <a
-                key={variant.checkoutId}
-                href={getCheckoutUrl(variant.checkoutId, email)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block p-4 rounded-xl border border-white/10 hover:border-drawsports-primary hover:shadow-drawsports-glow transition-all duration-200 text-center"
-              >
-                <p className="text-white font-bold text-lg">{variant.users} {t["dashboard.users"]}</p>
-                <p className="text-drawsports-primary text-sm font-medium mt-2">
-                  {t["dashboard.buyPlan"]} →
-                </p>
-              </a>
-            ))}
+        {/* Planes de compra - solo para owners (los members no compran) */}
+        {!isMember && (
+          <div className="bg-drawsports-bg-card rounded-2xl border border-white/5 shadow-drawsports-card p-6 mb-8">
+            <h3 className="text-drawsports-text-muted text-sm font-medium uppercase tracking-wider mb-4">
+              {t["dashboard.choosePlan"]}
+            </h3>
+            <div className="grid sm:grid-cols-3 gap-4">
+              {LEMON_SQUEEZY_VARIANTS.map((variant) => (
+                <a
+                  key={variant.checkoutId}
+                  href={getCheckoutUrl(variant.checkoutId, email)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block p-4 rounded-xl border border-white/10 hover:border-drawsports-primary hover:shadow-drawsports-glow transition-all duration-200 text-center"
+                >
+                  <p className="text-white font-bold text-lg">{variant.users} {t["dashboard.users"]}</p>
+                  <p className="text-drawsports-primary text-sm font-medium mt-2">
+                    {t["dashboard.buyPlan"]} →
+                  </p>
+                </a>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Qué incluye */}
         <div className="bg-drawsports-bg-card rounded-2xl border border-white/5 shadow-drawsports-card p-6 mb-8">

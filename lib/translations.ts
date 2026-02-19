@@ -79,6 +79,13 @@ export const translations = {
     "dashboard.manageTeam.member": "Miembro",
     "dashboard.manageTeam.placeholder": "email@ejemplo.com",
     "dashboard.manageTeam.inviteSent": "Invitación enviada. El usuario recibirá un email para registrarse.",
+    "dashboard.teamName": "Nombre del equipo",
+    "dashboard.teamName.edit": "Editar",
+    "dashboard.teamName.save": "Guardar",
+    "dashboard.teamName.saving": "Guardando…",
+    "dashboard.teamName.cancel": "Cancelar",
+    "dashboard.teamName.updated": "Nombre del equipo actualizado.",
+    "dashboard.team": "Equipo",
   },
   en: {
     // Landing
@@ -160,6 +167,13 @@ export const translations = {
     "dashboard.manageTeam.member": "Member",
     "dashboard.manageTeam.placeholder": "email@example.com",
     "dashboard.manageTeam.inviteSent": "Invitation sent. The user will receive an email to sign up.",
+    "dashboard.teamName": "Team name",
+    "dashboard.teamName.edit": "Edit",
+    "dashboard.teamName.save": "Save",
+    "dashboard.teamName.saving": "Saving…",
+    "dashboard.teamName.cancel": "Cancel",
+    "dashboard.teamName.updated": "Team name updated.",
+    "dashboard.team": "Team",
   },
 } as const;
 

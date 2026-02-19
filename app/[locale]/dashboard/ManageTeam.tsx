@@ -9,12 +9,14 @@ type Member = { email: string; organization_role: string };
 
 export function ManageTeam({
   orgId,
+  orgName: initialOrgName,
   seatsLimit,
   members,
   locale,
   t,
 }: {
   orgId: string;
+  orgName: string;
   seatsLimit: number;
   members: Member[];
   locale: Locale;
@@ -23,8 +25,48 @@ export function ManageTeam({
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [orgName, setOrgName] = useState(initialOrgName);
+  const [orgNameEdit, setOrgNameEdit] = useState(initialOrgName);
+  const [savingName, setSavingName] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
 
   const slotsLeft = seatsLimit - members.length;
+
+  async function handleSaveTeamName(e: React.FormEvent) {
+    e.preventDefault();
+    setMessage(null);
+    setSavingName(true);
+    const supabase = createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    if (!session?.access_token || !supabaseUrl) {
+      setMessage({ type: "error", text: "Sesión expirada." });
+      setSavingName(false);
+      return;
+    }
+    try {
+      const res = await fetch(`${supabaseUrl}/functions/v1/update-org`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({ org_id: orgId, name: orgNameEdit.trim() }),
+      });
+      const result = (await res.json().catch(() => ({}))) as { success?: boolean; error?: string };
+      setSavingName(false);
+      if (res.ok && result?.success) {
+        setOrgName(orgNameEdit.trim());
+        setIsEditingName(false);
+        setMessage({ type: "success", text: t["dashboard.teamName.updated"] });
+      } else {
+        setMessage({ type: "error", text: result?.error || "Error" });
+      }
+    } catch {
+      setSavingName(false);
+      setMessage({ type: "error", text: "Error inesperado" });
+    }
+  }
 
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault();
@@ -58,6 +100,53 @@ export function ManageTeam({
 
   return (
     <div className="bg-drawsports-bg-card rounded-2xl border border-white/5 shadow-drawsports-card p-6 mb-8">
+      <div className="mb-6">
+        <h3 className="text-drawsports-text-muted text-sm font-medium uppercase tracking-wider mb-2">
+          {t["dashboard.teamName"]}
+        </h3>
+        {isEditingName ? (
+          <form onSubmit={handleSaveTeamName} className="flex flex-wrap gap-2 items-center">
+            <input
+              type="text"
+              value={orgNameEdit}
+              onChange={(e) => setOrgNameEdit(e.target.value)}
+              placeholder="Ej: Equipo Barcelona"
+              minLength={2}
+              maxLength={100}
+              required
+              className="flex-1 min-w-[200px] px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-white/40 focus:border-drawsports-primary focus:outline-none"
+            />
+            <button
+              type="submit"
+              disabled={savingName}
+              className="px-4 py-2 rounded-xl bg-drawsports-primary text-white font-bold hover:opacity-90 disabled:opacity-50"
+            >
+              {savingName ? t["dashboard.teamName.saving"] : t["dashboard.teamName.save"]}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setIsEditingName(false);
+                setOrgNameEdit(orgName);
+              }}
+              className="px-4 py-2 rounded-xl border border-white/20 text-drawsports-text-muted text-sm hover:bg-white/5"
+            >
+              {t["dashboard.teamName.cancel"]}
+            </button>
+          </form>
+        ) : (
+          <div className="flex items-center gap-2">
+            <p className="text-white font-medium">{orgName}</p>
+            <button
+              type="button"
+              onClick={() => setIsEditingName(true)}
+              className="text-drawsports-primary hover:underline text-sm font-medium"
+            >
+              {t["dashboard.teamName.edit"]}
+            </button>
+          </div>
+        )}
+      </div>
       <h3 className="text-drawsports-text-muted text-sm font-medium uppercase tracking-wider mb-4 flex items-center gap-2">
         <Users className="w-4 h-4" />
         {t["dashboard.manageTeam"]}
