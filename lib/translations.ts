@@ -88,6 +88,7 @@ export const translations = {
     "dashboard.teamName.updated": "Nombre del equipo actualizado.",
     "dashboard.team": "Equipo",
     "dashboard.refreshHint": "Si acabas de pagar, refresca la página o cierra sesión y vuelve a entrar.",
+    "dashboard.licenseActive": "Licencia activa",
   },
   en: {
     // Landing
@@ -178,6 +179,7 @@ export const translations = {
     "dashboard.teamName.updated": "Team name updated.",
     "dashboard.team": "Team",
     "dashboard.refreshHint": "If you just paid, refresh the page or sign out and sign back in.",
+    "dashboard.licenseActive": "License active",
   },
 } as const;
 
