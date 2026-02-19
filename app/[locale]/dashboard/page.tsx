@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/supabase/server";
 import { CheckCircle, XCircle, Calendar, Download, Mail, Zap } from "lucide-react";
 import { LogoutButton } from "./LogoutButton";
+import { ManageTeam } from "./ManageTeam";
 import Link from "next/link";
 import Image from "next/image";
 import { translations, type Locale } from "@/lib/translations";
@@ -39,9 +40,30 @@ export default async function DashboardPage({
 
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
-    .select("email, is_pro, subscription_start, subscription_end, organization_id")
+    .select("email, is_pro, subscription_start, subscription_end, organization_id, organization_role")
     .eq("id", user.id)
     .maybeSingle();
+
+  let org: { seats_limit: number } | null = null;
+  let orgMembers: { email: string; organization_role: string }[] = [];
+
+  if (profile?.organization_id && profile?.organization_role === "owner") {
+    const { data: orgData } = await supabase
+      .from("organizations")
+      .select("seats_limit")
+      .eq("id", profile.organization_id)
+      .single();
+    org = orgData ?? null;
+
+    const { data: membersData } = await supabase
+      .from("profiles")
+      .select("email, organization_role")
+      .eq("organization_id", profile.organization_id);
+    orgMembers = (membersData ?? []).map((m) => ({
+      email: m.email ?? "",
+      organization_role: m.organization_role ?? "member",
+    }));
+  }
 
   if (profileError) {
     console.error("[Dashboard] profiles fetch error:", profileError);
@@ -155,6 +177,17 @@ export default async function DashboardPage({
             </div>
           </div>
         </div>
+
+        {/* Gestionar equipo - solo para owners */}
+        {org && profile?.organization_id && (
+          <ManageTeam
+            orgId={profile.organization_id}
+            seatsLimit={org.seats_limit}
+            members={orgMembers}
+            locale={locale as Locale}
+            t={t}
+          />
+        )}
 
         {/* Planes de compra - primero */}
         <div className="bg-drawsports-bg-card rounded-2xl border border-white/5 shadow-drawsports-card p-6 mb-8">

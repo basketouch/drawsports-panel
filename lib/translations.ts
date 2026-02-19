@@ -54,6 +54,16 @@ export const translations = {
     "dashboard.buyPlan": "Comprar",
     "dashboard.users": "usuarios",
     "dashboard.choosePlan": "Elige tu plan",
+    "dashboard.manageTeam": "Gestionar equipo",
+    "dashboard.manageTeam.desc": "Añade miembros a tu equipo. Cada uno tendrá acceso PRO.",
+    "dashboard.manageTeam.seats": "Plazas",
+    "dashboard.manageTeam.addMember": "Añadir por email",
+    "dashboard.manageTeam.add": "Añadir",
+    "dashboard.manageTeam.adding": "Añadiendo…",
+    "dashboard.manageTeam.members": "Miembros",
+    "dashboard.manageTeam.owner": "Administrador",
+    "dashboard.manageTeam.member": "Miembro",
+    "dashboard.manageTeam.placeholder": "email@ejemplo.com",
   },
   en: {
     // Landing
@@ -110,6 +120,16 @@ export const translations = {
     "dashboard.buyPlan": "Buy",
     "dashboard.users": "users",
     "dashboard.choosePlan": "Choose your plan",
+    "dashboard.manageTeam": "Manage team",
+    "dashboard.manageTeam.desc": "Add members to your team. Each will get PRO access.",
+    "dashboard.manageTeam.seats": "Seats",
+    "dashboard.manageTeam.addMember": "Add by email",
+    "dashboard.manageTeam.add": "Add",
+    "dashboard.manageTeam.adding": "Adding…",
+    "dashboard.manageTeam.members": "Members",
+    "dashboard.manageTeam.owner": "Admin",
+    "dashboard.manageTeam.member": "Member",
+    "dashboard.manageTeam.placeholder": "email@example.com",
   },
 } as const;
 
