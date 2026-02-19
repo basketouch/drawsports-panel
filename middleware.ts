@@ -18,7 +18,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/es/dashboard", request.url));
   }
 
-  return await updateSession(request);
+  try {
+    return await updateSession(request);
+  } catch {
+    return NextResponse.next();
+  }
 }
 
 export const config = {
