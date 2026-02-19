@@ -103,15 +103,9 @@ export default function LoginPage() {
             </button>
           </form>
           <p className="mt-5 text-center text-drawsports-text-muted text-sm">
-            <a
-              href="https://drawsports.app"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-drawsports-primary hover:underline"
-            >
+            <Link href={`/${locale}/forgot-password`} className="text-drawsports-primary hover:underline">
               {t["login.forgot"]}
-            </a>{" "}
-            {t["login.forgot.hint"]}
+            </Link>
           </p>
           <p className="mt-4 text-center text-drawsports-text-muted text-sm">
             {t["signup.noAccount"]}{" "}

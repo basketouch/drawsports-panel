@@ -17,6 +17,8 @@ export default function SignupPage() {
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [hasSession, setHasSession] = useState(false);
   const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
@@ -36,7 +38,7 @@ export default function SignupPage() {
     setLoading(true);
 
     const supabase = createClient();
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: { emailRedirectTo: `${window.location.origin}/${locale}/dashboard` },
@@ -48,12 +50,47 @@ export default function SignupPage() {
       return;
     }
 
-    router.push(`/${locale}/dashboard`);
-    router.refresh();
+    setLoading(false);
+    setSuccess(true);
+    setHasSession(!!data?.session);
   }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#1a0f0f] px-4">
+      {success && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" role="dialog" aria-modal="true">
+          <div className="bg-drawsports-bg-card rounded-2xl p-8 border border-white/10 shadow-drawsports-card max-w-md w-full text-center">
+            <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-green-500/20 flex items-center justify-center">
+              <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-bold text-white mb-2">{t["signup.checkEmail"]}</h2>
+            <p className="text-drawsports-text-muted text-sm mb-6">
+              {t["signup.checkEmailText"]} <strong className="text-white">{email}</strong>
+            </p>
+            <p className="text-drawsports-text-muted text-xs mb-6">{t["signup.checkSpam"]}</p>
+            <div className="flex gap-2 justify-center flex-wrap">
+              {hasSession ? (
+                <Link href={`/${locale}/dashboard`} className="px-6 py-2 rounded-[50px] bg-drawsports-primary text-white text-sm font-medium hover:shadow-drawsports-glow">
+                  {t["signup.goPanel"]}
+                </Link>
+              ) : (
+                <Link href={`/${locale}/login`} className="px-6 py-2 rounded-[50px] bg-white/10 text-white text-sm font-medium hover:bg-white/20">
+                  {t["signup.goLogin"]}
+                </Link>
+              )}
+              <button
+                type="button"
+                onClick={() => setSuccess(false)}
+                className="px-6 py-2 rounded-[50px] border border-white/20 text-drawsports-text-muted text-sm font-medium hover:bg-white/5"
+              >
+                {t["signup.close"]}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <Link href={`/${locale}`} className="mb-8">
         <Image
           src="/imagenes/logo.png"

@@ -16,7 +16,7 @@ export const translations = {
     "login.submit": "Entrar",
     "login.submitting": "Entrando…",
     "login.forgot": "¿Olvidaste tu contraseña?",
-    "login.forgot.hint": "(restablece desde drawsports.app)",
+    "login.forgot.hint": "",
     "login.hasAccount": "¿Ya tienes cuenta?",
 
     // Signup
@@ -26,6 +26,20 @@ export const translations = {
     "signup.submit": "Crear cuenta",
     "signup.submitting": "Creando cuenta…",
     "signup.noAccount": "¿No tienes cuenta?",
+    "signup.checkEmail": "Revisa tu correo",
+    "signup.checkEmailText": "Te hemos enviado un enlace de confirmación. Haz clic en el enlace del email para activar tu cuenta.",
+    "signup.checkSpam": "Si no ves el correo, revisa la carpeta de spam.",
+    "signup.goLogin": "Ir a iniciar sesión",
+    "signup.goPanel": "Ir al panel",
+    "signup.close": "Cerrar",
+
+    // Forgot password
+    "forgot.title": "Restablecer contraseña",
+    "forgot.subtitle": "Introduce tu email y te enviaremos un enlace para crear una nueva contraseña.",
+    "forgot.submit": "Enviar enlace",
+    "forgot.sending": "Enviando…",
+    "forgot.successTitle": "Revisa tu correo",
+    "forgot.successText": "Si existe una cuenta con ese email, recibirás un enlace para restablecer tu contraseña.",
 
     // Dashboard
     "dashboard.title": "DrawSports PRO",
@@ -83,7 +97,7 @@ export const translations = {
     "login.submit": "Sign in",
     "login.submitting": "Signing in…",
     "login.forgot": "Forgot your password?",
-    "login.forgot.hint": "(reset from drawsports.app)",
+    "login.forgot.hint": "",
     "login.hasAccount": "Already have an account?",
 
     // Signup
@@ -93,6 +107,20 @@ export const translations = {
     "signup.submit": "Create account",
     "signup.submitting": "Creating account…",
     "signup.noAccount": "Don't have an account?",
+    "signup.checkEmail": "Check your email",
+    "signup.checkEmailText": "We've sent a confirmation link. Click the link in the email to activate your account.",
+    "signup.checkSpam": "If you don't see it, check your spam folder.",
+    "signup.goLogin": "Go to login",
+    "signup.goPanel": "Go to panel",
+    "signup.close": "Close",
+
+    // Forgot password
+    "forgot.title": "Reset password",
+    "forgot.subtitle": "Enter your email and we'll send you a link to create a new password.",
+    "forgot.submit": "Send link",
+    "forgot.sending": "Sending…",
+    "forgot.successTitle": "Check your email",
+    "forgot.successText": "If an account exists with that email, you'll receive a link to reset your password.",
 
     // Dashboard
     "dashboard.title": "DrawSports PRO",
