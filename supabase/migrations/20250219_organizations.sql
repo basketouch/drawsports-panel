@@ -13,27 +13,40 @@ CREATE TABLE IF NOT EXISTS organizations (
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS organization_id uuid;
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS organization_role text CHECK (organization_role IN ('owner', 'member'));
 
+-- Si organization_id existe como text, convertir a uuid
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = 'public' AND table_name = 'profiles' AND column_name = 'organization_id' AND udt_name = 'text'
+  ) THEN
+    ALTER TABLE profiles ALTER COLUMN organization_id TYPE uuid USING NULLIF(trim(organization_id), '')::uuid;
+  END IF;
+END $$;
+
 -- Índice para buscar miembros de una org
-CREATE INDEX IF NOT EXISTS idx_profiles_organization_id ON profiles(organization_id) WHERE organization_id IS NOT NULL;
+DROP INDEX IF EXISTS idx_profiles_organization_id;
+CREATE INDEX idx_profiles_organization_id ON profiles(organization_id) WHERE organization_id IS NOT NULL;
 
 -- RLS: los miembros de una org pueden leer su organización
 ALTER TABLE organizations ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Org members can read own organization" ON organizations;
 CREATE POLICY "Org members can read own organization"
   ON organizations
   FOR SELECT
   USING (
-    id IN (SELECT organization_id FROM profiles WHERE id = auth.uid())
+    id IN (SELECT (organization_id)::uuid FROM profiles WHERE id = auth.uid() AND organization_id IS NOT NULL)
   );
 
--- Solo el owner puede actualizar (invitar, etc.) - se hará vía service role en el panel
+DROP POLICY IF EXISTS "Owners can update own organization" ON organizations;
 CREATE POLICY "Owners can update own organization"
   ON organizations
   FOR UPDATE
   USING (
     id IN (
-      SELECT organization_id FROM profiles
-      WHERE id = auth.uid() AND organization_role = 'owner'
+      SELECT (organization_id)::uuid FROM profiles
+      WHERE id = auth.uid() AND organization_role = 'owner' AND organization_id IS NOT NULL
     )
   );
 
@@ -52,16 +65,16 @@ DECLARE
   current_count int;
   target_profile_id uuid;
 BEGIN
-  -- Verificar que el caller es owner de la org
+  -- Verificar que el caller es owner de la org (organization_id puede ser text o uuid)
   SELECT id INTO owner_profile_id
   FROM profiles
-  WHERE organization_id = org_id AND organization_role = 'owner' AND id = auth.uid();
+  WHERE (organization_id)::uuid = org_id AND organization_role = 'owner' AND id = auth.uid();
   IF owner_profile_id IS NULL THEN
     RETURN jsonb_build_object('success', false, 'error', 'No eres el administrador de este equipo');
   END IF;
 
   -- Contar miembros actuales
-  SELECT COUNT(*) INTO current_count FROM profiles WHERE organization_id = org_id;
+  SELECT COUNT(*) INTO current_count FROM profiles WHERE (organization_id)::uuid = org_id;
   IF current_count >= (SELECT seats_limit FROM organizations WHERE id = org_id) THEN
     RETURN jsonb_build_object('success', false, 'error', 'No hay plazas disponibles');
   END IF;
