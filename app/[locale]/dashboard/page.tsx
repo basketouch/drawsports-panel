@@ -156,28 +156,7 @@ export default async function DashboardPage({
           </div>
         </div>
 
-        {/* Qué incluye */}
-        <div className="bg-drawsports-bg-card rounded-2xl border border-white/5 shadow-drawsports-card p-6 mb-8">
-          <h3 className="text-drawsports-text-muted text-sm font-medium uppercase tracking-wider mb-4">
-            {t["dashboard.whatsIncluded"]}
-          </h3>
-          <ul className="space-y-3">
-            <li className="flex items-center gap-3 text-white">
-              <Zap className="w-5 h-5 text-drawsports-primary flex-shrink-0" />
-              {t["dashboard.feature1"]}
-            </li>
-            <li className="flex items-center gap-3 text-white">
-              <Zap className="w-5 h-5 text-drawsports-primary flex-shrink-0" />
-              {t["dashboard.feature2"]}
-            </li>
-            <li className="flex items-center gap-3 text-white">
-              <Zap className="w-5 h-5 text-drawsports-primary flex-shrink-0" />
-              {t["dashboard.feature3"]}
-            </li>
-          </ul>
-        </div>
-
-        {/* Planes de compra */}
+        {/* Planes de compra - primero */}
         <div className="bg-drawsports-bg-card rounded-2xl border border-white/5 shadow-drawsports-card p-6 mb-8">
           <h3 className="text-drawsports-text-muted text-sm font-medium uppercase tracking-wider mb-4">
             {t["dashboard.choosePlan"]}
@@ -198,6 +177,27 @@ export default async function DashboardPage({
               </a>
             ))}
           </div>
+        </div>
+
+        {/* Qué incluye */}
+        <div className="bg-drawsports-bg-card rounded-2xl border border-white/5 shadow-drawsports-card p-6 mb-8">
+          <h3 className="text-drawsports-text-muted text-sm font-medium uppercase tracking-wider mb-4">
+            {t["dashboard.whatsIncluded"]}
+          </h3>
+          <ul className="space-y-3">
+            <li className="flex items-center gap-3 text-white">
+              <Zap className="w-5 h-5 text-drawsports-primary flex-shrink-0" />
+              {t["dashboard.feature1"]}
+            </li>
+            <li className="flex items-center gap-3 text-white">
+              <Zap className="w-5 h-5 text-drawsports-primary flex-shrink-0" />
+              {t["dashboard.feature2"]}
+            </li>
+            <li className="flex items-center gap-3 text-white">
+              <Zap className="w-5 h-5 text-drawsports-primary flex-shrink-0" />
+              {t["dashboard.feature3"]}
+            </li>
+          </ul>
         </div>
 
         {/* Acciones */}
