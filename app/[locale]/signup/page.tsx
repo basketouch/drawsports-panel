@@ -15,6 +15,7 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [teamName, setTeamName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -41,7 +42,10 @@ export default function SignupPage() {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { emailRedirectTo: `${window.location.origin}/${locale}/dashboard` },
+      options: {
+        emailRedirectTo: `${window.location.origin}/${locale}/dashboard`,
+        data: teamName.trim() ? { preferred_team_name: teamName.trim() } : undefined,
+      },
     });
 
     if (error) {
@@ -141,6 +145,22 @@ export default function SignupPage() {
                 required
                 minLength={6}
                 className="w-full px-4 py-3 rounded-xl bg-[#1a0f0f] border border-white/10 text-white placeholder-white/40 focus:ring-2 focus:ring-drawsports-primary focus:border-drawsports-primary transition-all"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="teamName"
+                className="block text-sm font-medium text-drawsports-text-muted mb-1"
+              >
+                {t["signup.teamName"]}
+              </label>
+              <input
+                id="teamName"
+                type="text"
+                value={teamName}
+                onChange={(e) => setTeamName(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl bg-[#1a0f0f] border border-white/10 text-white placeholder-white/40 focus:ring-2 focus:ring-drawsports-primary focus:border-drawsports-primary transition-all"
+                placeholder={t["signup.teamNamePlaceholder"]}
               />
             </div>
             <div>

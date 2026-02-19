@@ -3,6 +3,7 @@ import { createClient } from "@/supabase/server";
 import { CheckCircle, XCircle, Calendar, Download, Mail, Zap } from "lucide-react";
 import { LogoutButton } from "./LogoutButton";
 import { ManageTeam } from "./ManageTeam";
+import { SyncLicenseButton } from "./SyncLicenseButton";
 import Link from "next/link";
 import Image from "next/image";
 import { translations, type Locale } from "@/lib/translations";
@@ -60,7 +61,10 @@ export default async function DashboardPage({
     orgName = orgData?.name ?? null;
 
     if (profile.organization_role === "owner") {
-      org = orgData ? { seats_limit: orgData.seats_limit, name: orgData.name ?? "Mi equipo" } : null;
+      // Fallback si RLS bloquea la lectura de organizations: usar valores por defecto
+      org = orgData
+        ? { seats_limit: orgData.seats_limit, name: orgData.name ?? "Mi equipo" }
+        : { seats_limit: 3, name: "Mi equipo" };
       const { data: membersData } = await supabase
         .from("profiles")
         .select("email, organization_role")
@@ -71,6 +75,7 @@ export default async function DashboardPage({
       }));
     }
   }
+
 
   const isMember = profile?.organization_role === "member";
 
@@ -277,6 +282,7 @@ export default async function DashboardPage({
             <p className="text-sm text-white">
               {t["dashboard.refreshHint"]}
             </p>
+            <SyncLicenseButton locale={locale as Locale} label={t["dashboard.syncLicense"]} />
             <p className="text-sm text-white">
               {t["dashboard.paid.hint"]}{" "}
               <a

@@ -32,6 +32,8 @@ export const translations = {
     "signup.goLogin": "Ir a iniciar sesión",
     "signup.goPanel": "Ir al panel",
     "signup.close": "Cerrar",
+    "signup.teamName": "Nombre del equipo o club (opcional)",
+    "signup.teamNamePlaceholder": "Ej: Club Baloncesto Madrid",
 
     // Forgot password
     "forgot.title": "Restablecer contraseña",
@@ -87,7 +89,8 @@ export const translations = {
     "dashboard.teamName.cancel": "Cancelar",
     "dashboard.teamName.updated": "Nombre del equipo actualizado.",
     "dashboard.team": "Equipo",
-    "dashboard.refreshHint": "Si acabas de pagar, refresca la página o cierra sesión y vuelve a entrar.",
+    "dashboard.refreshHint": "Si acabas de pagar, usa el botón de abajo o cierra sesión y vuelve a entrar.",
+    "dashboard.syncLicense": "Sincronizar licencia",
     "dashboard.licenseActive": "Licencia activa",
   },
   en: {
@@ -123,6 +126,8 @@ export const translations = {
     "signup.goLogin": "Go to login",
     "signup.goPanel": "Go to panel",
     "signup.close": "Close",
+    "signup.teamName": "Team or club name (optional)",
+    "signup.teamNamePlaceholder": "e.g. Madrid Basketball Club",
 
     // Forgot password
     "forgot.title": "Reset password",
@@ -178,7 +183,8 @@ export const translations = {
     "dashboard.teamName.cancel": "Cancel",
     "dashboard.teamName.updated": "Team name updated.",
     "dashboard.team": "Team",
-    "dashboard.refreshHint": "If you just paid, refresh the page or sign out and sign back in.",
+    "dashboard.refreshHint": "If you just paid, use the button below or sign out and sign back in.",
+    "dashboard.syncLicense": "Sync license",
     "dashboard.licenseActive": "License active",
   },
 } as const;
