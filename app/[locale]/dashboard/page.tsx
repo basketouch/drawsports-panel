@@ -21,6 +21,9 @@ function daysBetween(from: Date, to: Date): number {
   return Math.floor(diff / (1000 * 60 * 60 * 24));
 }
 
+// Evitar caché: siempre datos frescos tras pago en Lemon Squeezy
+export const dynamic = "force-dynamic";
+
 export default async function DashboardPage({
   params,
 }: {
@@ -270,7 +273,10 @@ export default async function DashboardPage({
         </div>
 
         {!isPro && (
-          <div className="mt-6 p-4 rounded-xl bg-drawsports-primary/10 border border-drawsports-primary/30">
+          <div className="mt-6 p-4 rounded-xl bg-drawsports-primary/10 border border-drawsports-primary/30 space-y-2">
+            <p className="text-sm text-white">
+              {t["dashboard.refreshHint"]}
+            </p>
             <p className="text-sm text-white">
               {t["dashboard.paid.hint"]}{" "}
               <a
