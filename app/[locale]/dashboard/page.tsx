@@ -228,7 +228,7 @@ export default async function DashboardPage({
             locale={locale as Locale}
             t={t}
           />
-        ) : !isMember ? (
+        ) : !isMember && !isPro ? (
           <div className="bg-drawsports-bg-card rounded-2xl border border-white/5 shadow-drawsports-card p-6 mb-8">
             <h3 className="text-drawsports-text-muted text-sm font-medium uppercase tracking-wider mb-2 flex items-center gap-2">
               <Users className="w-4 h-4" />
@@ -241,8 +241,8 @@ export default async function DashboardPage({
           </div>
         ) : null}
 
-        {/* Planes de compra - solo para owners (los members no compran) */}
-        {!isMember && (
+        {/* Planes de compra - solo para owners sin PRO (members no compran, PRO ya tienen) */}
+        {!isMember && !isPro && (
           <div className="bg-drawsports-bg-card rounded-2xl border border-white/5 shadow-drawsports-card p-6 mb-8">
             <h3 className="text-drawsports-text-muted text-sm font-medium uppercase tracking-wider mb-4">
               {t["dashboard.choosePlan"]}
