@@ -40,9 +40,9 @@ export default function ForgotPasswordPage() {
   if (success) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-[#1a0f0f] px-4">
-        <Link href={`/${locale}`} className="mb-8">
+        <a href={locale === "en" ? "https://drawsports.app/pro/en/" : "https://drawsports.app/pro/"} className="mb-8 block">
           <Image src="/imagenes/logo.png" alt="DrawSports" width={80} height={80} className="rounded-[22%] shadow-drawsports-card" />
-        </Link>
+        </a>
         <div className="w-full max-w-md text-center">
           <div className="bg-drawsports-bg-card rounded-2xl p-8 border border-white/5 shadow-drawsports-card">
             <h1 className="text-xl font-bold text-white mb-2">{t["forgot.successTitle"]}</h1>
@@ -63,9 +63,9 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#1a0f0f] px-4">
-      <Link href={`/${locale}`} className="mb-8">
+      <a href={locale === "en" ? "https://drawsports.app/pro/en/" : "https://drawsports.app/pro/"} className="mb-8 block">
         <Image src="/imagenes/logo.png" alt="DrawSports" width={80} height={80} className="rounded-[22%] shadow-drawsports-card" />
-      </Link>
+      </a>
       <div className="w-full max-w-md">
         <div className="bg-drawsports-bg-card rounded-2xl p-8 border border-white/5 shadow-drawsports-card">
           <h1 className="text-2xl font-bold text-white text-center mb-2">{t["forgot.title"]}</h1>

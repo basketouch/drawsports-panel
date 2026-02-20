@@ -39,7 +39,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#1a0f0f] px-4">
-      <Link href={`/${locale}`} className="mb-8">
+      <a href={locale === "en" ? "https://drawsports.app/pro/en/" : "https://drawsports.app/pro/"} className="mb-8 block">
         <Image
           src="/imagenes/logo.png"
           alt="DrawSports"
@@ -47,7 +47,7 @@ export default function LoginPage() {
           height={80}
           className="rounded-[22%] shadow-drawsports-card"
         />
-      </Link>
+      </a>
       <div className="w-full max-w-md">
         <div className="bg-drawsports-bg-card rounded-2xl p-8 border border-white/5 shadow-drawsports-card">
           <h1 className="text-2xl font-bold text-white text-center mb-2">
@@ -116,12 +116,12 @@ export default function LoginPage() {
           </p>
         </div>
         <p className="mt-6 text-center">
-          <Link
-            href={`/${locale}`}
+          <a
+            href={locale === "en" ? "https://drawsports.app/pro/en/" : "https://drawsports.app/pro/"}
             className="text-drawsports-text-muted hover:text-white transition-colors text-sm"
           >
             ← {t.back}
-          </Link>
+          </a>
         </p>
       </div>
     </div>
