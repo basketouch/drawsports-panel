@@ -34,9 +34,23 @@ export default async function DashboardPage({
   const t = translations[locale as Locale];
 
   const supabase = await createClient();
+  const { data: sessionData } = await supabase.auth.getSession();
   const {
     data: { user },
+    error: userError,
   } = await supabase.auth.getUser();
+
+  // DEBUG: logs temporales para diagnosticar sesión/perfil
+  console.log("[Dashboard DEBUG] session:", {
+    hasSession: !!sessionData?.session,
+    sessionUserId: sessionData?.session?.user?.id,
+  });
+  console.log("[Dashboard DEBUG] getUser:", {
+    hasUser: !!user,
+    userId: user?.id,
+    userEmail: user?.email,
+    userError: userError?.message ?? null,
+  });
 
   if (!user) {
     redirect(`/${locale}/login`);
@@ -47,6 +61,16 @@ export default async function DashboardPage({
     .select("email, is_pro, subscription_start, subscription_end, organization_id, organization_role")
     .eq("id", user.id)
     .maybeSingle();
+
+  // DEBUG: logs temporales para diagnosticar perfil
+  console.log("[Dashboard DEBUG] profile:", {
+    hasProfile: !!profile,
+    profileEmail: profile?.email,
+    isPro: profile?.is_pro,
+    organizationId: profile?.organization_id,
+    profileError: profileError?.message ?? null,
+    profileErrorCode: profileError?.code ?? null,
+  });
 
   let org: { seats_limit: number; name: string } | null = null;
   let orgMembers: { email: string; organization_role: string }[] = [];
