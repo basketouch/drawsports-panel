@@ -6,7 +6,7 @@ import { createClient } from "@/supabase/client";
 import { Users, X } from "lucide-react";
 import type { Locale } from "@/lib/translations";
 
-type Member = { email: string; organization_role: string };
+type Member = { id: string; email: string; organization_role: string };
 type Invite = { id: string; email: string };
 
 export function ManageTeam({
@@ -15,6 +15,7 @@ export function ManageTeam({
   seatsLimit,
   members,
   invites,
+  currentUserId,
   locale,
   t,
 }: {
@@ -23,6 +24,7 @@ export function ManageTeam({
   seatsLimit: number;
   members: Member[];
   invites: Invite[];
+  currentUserId: string;
   locale: Locale;
   t: Record<string, string>;
 }) {
@@ -35,9 +37,11 @@ export function ManageTeam({
   const [savingName, setSavingName] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
   const [invitesList, setInvitesList] = useState(invites);
+  const [membersList, setMembersList] = useState(members);
   const [revokingId, setRevokingId] = useState<string | null>(null);
+  const [removingId, setRemovingId] = useState<string | null>(null);
 
-  const slotsLeft = seatsLimit - members.length;
+  const slotsLeft = seatsLimit - membersList.length;
 
   async function handleRevokeInvite(inviteId: string) {
     setRevokingId(inviteId);
@@ -56,6 +60,42 @@ export function ManageTeam({
     setInvitesList((prev) => prev.filter((i) => i.id !== inviteId));
     setMessage({ type: "success", text: locale === "es" ? "Invitación revocada" : "Invitation revoked" });
     router.refresh();
+  }
+
+  async function handleRemoveMember(memberId: string) {
+    if (memberId === currentUserId) return;
+    setRemovingId(memberId);
+    setMessage(null);
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabase = createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.access_token || !supabaseUrl) {
+      setMessage({ type: "error", text: "Sesión expirada." });
+      setRemovingId(null);
+      return;
+    }
+    try {
+      const res = await fetch(`${supabaseUrl}/functions/v1/update-org`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({ org_id: orgId, action: "remove_member", member_id: memberId }),
+      });
+      const result = (await res.json().catch(() => ({}))) as { success?: boolean; error?: string };
+      setRemovingId(null);
+      if (res.ok && result?.success) {
+        setMembersList((prev) => prev.filter((m) => m.id !== memberId));
+        setMessage({ type: "success", text: locale === "es" ? "Miembro expulsado del equipo" : "Member removed from team" });
+        router.refresh();
+      } else {
+        setMessage({ type: "error", text: result?.error || "Error" });
+      }
+    } catch {
+      setRemovingId(null);
+      setMessage({ type: "error", text: "Error inesperado" });
+    }
   }
 
   async function handleSaveTeamName(e: React.FormEvent) {
@@ -182,7 +222,7 @@ export function ManageTeam({
         {t["dashboard.manageTeam.desc"]}
       </p>
       <p className="text-white text-sm mb-4">
-        {t["dashboard.manageTeam.seats"]}: {members.length} / {seatsLimit}
+        {t["dashboard.manageTeam.seats"]}: {membersList.length} / {seatsLimit}
       </p>
 
       {slotsLeft > 0 && (
@@ -212,12 +252,23 @@ export function ManageTeam({
       )}
 
       <div className="space-y-2">
-        {members.map((m) => (
-          <div key={m.email} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
-            <span className="text-white">{m.email}</span>
-            <span className="text-drawsports-text-muted text-xs">
+        {membersList.map((m) => (
+          <div key={m.id} className="flex items-center justify-between gap-2 py-2 border-b border-white/5 last:border-0">
+            <span className="text-white flex-1">{m.email}</span>
+            <span className="text-drawsports-text-muted text-xs shrink-0">
               {m.organization_role === "owner" ? t["dashboard.manageTeam.owner"] : t["dashboard.manageTeam.member"]}
             </span>
+            {m.organization_role === "member" && (
+              <button
+                type="button"
+                onClick={() => handleRemoveMember(m.id)}
+                disabled={removingId === m.id}
+                className="p-1.5 rounded text-red-500 hover:bg-red-500/20 hover:text-red-400 transition-colors disabled:opacity-50 shrink-0"
+                aria-label={locale === "es" ? "Expulsar del equipo" : "Remove from team"}
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
           </div>
         ))}
         {invitesList.map((inv) => (

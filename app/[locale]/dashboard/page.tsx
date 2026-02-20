@@ -86,9 +86,10 @@ export default async function DashboardPage({
         : { seats_limit: 3, name: "Mi equipo" };
       const { data: membersData } = await supabase
         .from("profiles")
-        .select("email, organization_role")
+        .select("id, email, organization_role")
         .eq("organization_id", profile.organization_id);
       orgMembers = (membersData ?? []).map((m) => ({
+        id: m.id,
         email: m.email ?? "",
         organization_role: m.organization_role ?? "member",
       }));
@@ -237,6 +238,7 @@ export default async function DashboardPage({
             seatsLimit={org.seats_limit}
             members={orgMembers}
             invites={orgInvites}
+            currentUserId={user.id}
             locale={locale as Locale}
             t={t}
           />
