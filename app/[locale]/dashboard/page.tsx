@@ -3,6 +3,7 @@ import { createClient } from "@/supabase/server";
 import { CheckCircle, XCircle, Calendar, Download, Mail, Zap, Users } from "lucide-react";
 import { LogoutButton } from "./LogoutButton";
 import { ManageTeam } from "./ManageTeam";
+import { SetupTeamName, needsTeamSetup } from "./SetupTeamName";
 import Link from "next/link";
 import Image from "next/image";
 import { translations, type Locale } from "@/lib/translations";
@@ -126,6 +127,15 @@ export default async function DashboardPage({
       </header>
 
       <main className="max-w-4xl mx-auto px-4 py-8">
+        {/* Primera vez tras pago: pedir nombre del equipo */}
+        {isPro && isOwner && profile?.organization_id && needsTeamSetup(orgName) && (
+          <SetupTeamName
+            orgId={profile.organization_id}
+            locale={locale as Locale}
+            t={t}
+          />
+        )}
+
         {/* Resumen de estado */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">

@@ -96,6 +96,12 @@ export const translations = {
     "dashboard.team.noTeam": "Sin equipo aún",
     "dashboard.team.choosePlan": "Elige un plan abajo para crear tu equipo e invitar miembros.",
     "dashboard.licenseActive": "Licencia activa",
+
+    "setup.teamName.title": "¿Cómo se llama tu equipo?",
+    "setup.teamName.subtitle": "Tras tu compra, ponle nombre a tu equipo o club.",
+    "setup.teamName.placeholder": "Ej: Club Baloncesto Madrid",
+    "setup.teamName.submit": "Continuar",
+    "setup.teamName.saving": "Guardando…",
   },
   en: {
     // Landing
@@ -194,6 +200,12 @@ export const translations = {
     "dashboard.team.noTeam": "No team yet",
     "dashboard.team.choosePlan": "Choose a plan below to create your team and invite members.",
     "dashboard.licenseActive": "License active",
+
+    "setup.teamName.title": "What's your team or club name?",
+    "setup.teamName.subtitle": "After your purchase, give your team or club a name.",
+    "setup.teamName.placeholder": "e.g. Madrid Basketball Club",
+    "setup.teamName.submit": "Continue",
+    "setup.teamName.saving": "Saving…",
   },
 } as const;
 

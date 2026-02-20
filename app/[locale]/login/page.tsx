@@ -108,12 +108,6 @@ export default function LoginPage() {
               {t["login.forgot"]}
             </Link>
           </p>
-          <p className="mt-4 text-center text-drawsports-text-muted text-sm">
-            {t["signup.noAccount"]}{" "}
-            <Link href={`/${locale}/signup`} className="text-drawsports-primary hover:underline font-medium">
-              {t["signup.btn"]}
-            </Link>
-          </p>
         </div>
         <p className="mt-6 text-center">
           <a
