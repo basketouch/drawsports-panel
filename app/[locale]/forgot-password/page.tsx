@@ -24,7 +24,7 @@ export default function ForgotPasswordPage() {
 
     const supabase = createClient();
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${typeof window !== "undefined" ? window.location.origin : "https://panel.drawsports.app"}/auth/callback?next=/update-password`,
+      redirectTo: `${typeof window !== "undefined" ? window.location.origin : "https://panel.drawsports.app"}/auth/verify?next=/update-password`,
     });
 
     if (error) {

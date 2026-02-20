@@ -1,15 +1,25 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { translations, type Locale } from "@/lib/translations";
 import { CheckCircle, Mail } from "lucide-react";
+import { createClient } from "@/supabase/client";
 
 export default function AfterPaymentPage() {
   const params = useParams();
   const locale = (params?.locale as Locale) || "es";
   const t = translations[locale];
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsLoggedIn(!!session);
+    });
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#1a0f0f] px-4">
@@ -42,14 +52,28 @@ export default function AfterPaymentPage() {
           </div>
           <div className="pt-4 border-t border-white/10">
             <p className="text-drawsports-text-muted text-sm mb-3">
-              {t["afterPayment.alreadyActive"]}
+              {isLoggedIn ? t["afterPayment.goToPanel"] : t["afterPayment.alreadyActive"]}
             </p>
-            <Link
-              href={`/${locale}/login`}
-              className="inline-block w-full py-4 rounded-[50px] bg-drawsports-primary text-white font-bold shadow-drawsports-glow hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(255,23,68,0.5)] transition-all duration-200 text-center"
-            >
-              {t["afterPayment.login"]}
-            </Link>
+            {isLoggedIn ? (
+              <Link
+                href={`/${locale}/dashboard`}
+                className="inline-block w-full py-4 rounded-[50px] bg-drawsports-primary text-white font-bold shadow-drawsports-glow hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(255,23,68,0.5)] transition-all duration-200 text-center"
+              >
+                {t["afterPayment.dashboard"]}
+              </Link>
+            ) : (
+              <Link
+                href={`/${locale}/login`}
+                className="inline-block w-full py-4 rounded-[50px] bg-drawsports-primary text-white font-bold shadow-drawsports-glow hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(255,23,68,0.5)] transition-all duration-200 text-center"
+              >
+                {t["afterPayment.login"]}
+              </Link>
+            )}
+            {isLoggedIn && (
+              <p className="text-drawsports-text-muted text-xs mt-3">
+                {t["afterPayment.refreshHint"]}
+              </p>
+            )}
           </div>
         </div>
         <p className="mt-6 text-center">

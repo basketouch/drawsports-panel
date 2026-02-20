@@ -49,7 +49,7 @@ export default async function DashboardPage({
     .eq("id", user.id)
     .maybeSingle();
 
-  let org: { seats_limit: number; name: string } | null = null;
+  let org: { seats_limit: number; name: string; subscription_end?: string | null } | null = null;
   let orgMembers: { id: string; email: string; organization_role: string; consumes_seat?: boolean }[] = [];
   let orgInvites: { id: string; email: string }[] = [];
   let orgName: string | null = null;
@@ -60,15 +60,15 @@ export default async function DashboardPage({
   if (profile?.organization_id) {
     const { data: orgData } = await supabase
       .from("organizations")
-      .select("seats_limit, name")
+      .select("seats_limit, name, subscription_end")
       .eq("id", profile.organization_id)
       .single();
     orgName = orgData?.name ?? null;
 
     // Owner y member ven el equipo; solo owner carga invites y puede gestionar
     org = orgData
-      ? { seats_limit: orgData.seats_limit, name: orgData.name ?? "Mi equipo" }
-      : { seats_limit: 3, name: "Mi equipo" };
+      ? { seats_limit: orgData.seats_limit, name: orgData.name ?? "Mi equipo", subscription_end: orgData.subscription_end }
+      : { seats_limit: 3, name: "Mi equipo", subscription_end: null };
     const { data: membersData } = await supabase
       .from("profiles")
       .select("id, email, organization_role, consumes_seat")
@@ -105,8 +105,13 @@ export default async function DashboardPage({
     : null;
 
   const today = new Date();
-  const daysLeft = subscriptionEnd && isPro ? daysBetween(today, subscriptionEnd) : 0;
-  const isExpired = subscriptionEnd && today > subscriptionEnd;
+  const orgSubscriptionEnd = org?.subscription_end ? new Date(org.subscription_end) : null;
+  const hasActiveSubscription =
+    isPro ||
+    (profile?.organization_id && orgSubscriptionEnd && orgSubscriptionEnd > today);
+  const effectiveEnd = subscriptionEnd || orgSubscriptionEnd;
+  const daysLeft = effectiveEnd && hasActiveSubscription ? daysBetween(today, effectiveEnd) : 0;
+  const isExpired = effectiveEnd ? today > effectiveEnd : false;
 
   return (
     <div className="min-h-screen bg-[#1a0f0f]">
@@ -128,7 +133,7 @@ export default async function DashboardPage({
 
       <main className="max-w-4xl mx-auto px-4 py-8">
         {/* Primera vez tras pago: pedir nombre del equipo */}
-        {isPro && isOwner && profile?.organization_id && needsTeamSetup(orgName) && (
+        {hasActiveSubscription && isOwner && profile?.organization_id && needsTeamSetup(orgName) && (
           <SetupTeamName
             orgId={profile.organization_id}
             locale={locale as Locale}
@@ -139,7 +144,7 @@ export default async function DashboardPage({
         {/* Resumen de estado */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            {isPro && !isExpired ? (
+            {hasActiveSubscription && !isExpired ? (
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-drawsports-primary/20 border border-drawsports-primary/40 text-drawsports-primary font-bold text-sm">
                 <CheckCircle className="w-4 h-4" />
                 {t["dashboard.pro.active"]}
@@ -163,7 +168,7 @@ export default async function DashboardPage({
             </h3>
             <p className="text-xl font-bold text-white">DrawSports PRO</p>
             <p className="text-drawsports-text-muted text-sm mt-1 flex-1">
-              {isPro ? t["dashboard.pro.desc"] : t["dashboard.pro.desc.inactive"]}
+              {hasActiveSubscription ? t["dashboard.pro.desc"] : t["dashboard.pro.desc.inactive"]}
             </p>
           </div>
 
@@ -172,7 +177,7 @@ export default async function DashboardPage({
             <h3 className="text-drawsports-text-muted text-sm font-medium uppercase tracking-wider mb-4">
               {t["dashboard.team"]}
             </h3>
-            {isPro && profile?.organization_id ? (
+            {hasActiveSubscription && profile?.organization_id ? (
               <p className="text-white font-medium flex-1">{orgName || "Mi equipo"}</p>
             ) : (
               <div className="flex-1">
@@ -213,12 +218,12 @@ export default async function DashboardPage({
                   </div>
                 </div>
               )}
-              {isPro && !subscriptionStart && !subscriptionEnd && (
+              {hasActiveSubscription && !subscriptionStart && !subscriptionEnd && (
                 <p className="text-drawsports-primary text-sm font-medium">
                   {t["dashboard.licenseActive"]}
                 </p>
               )}
-              {!isPro && !subscriptionStart && !subscriptionEnd && (
+              {!hasActiveSubscription && !subscriptionStart && !subscriptionEnd && (
                 <p className="text-drawsports-text-muted text-sm">—</p>
               )}
             </div>
@@ -238,7 +243,7 @@ export default async function DashboardPage({
             locale={locale as Locale}
             t={t}
           />
-        ) : !isMember && !isPro ? (
+        ) : !isMember && !hasActiveSubscription ? (
           <div className="bg-drawsports-bg-card rounded-2xl border border-white/5 shadow-drawsports-card p-6 mb-8">
             <h3 className="text-drawsports-text-muted text-sm font-medium uppercase tracking-wider mb-2 flex items-center gap-2">
               <Users className="w-4 h-4" />
@@ -251,8 +256,8 @@ export default async function DashboardPage({
           </div>
         ) : null}
 
-        {/* Planes de compra - solo para owners sin PRO (members no compran, PRO ya tienen) */}
-        {!isMember && !isPro && (
+        {/* Planes de compra - solo para usuarios sin suscripción activa (members no compran) */}
+        {!isMember && !hasActiveSubscription && (
           <div className="bg-drawsports-bg-card rounded-2xl border border-white/5 shadow-drawsports-card p-6 mb-8">
             <h3 className="text-drawsports-text-muted text-sm font-medium uppercase tracking-wider mb-4">
               {t["dashboard.choosePlan"]}
@@ -323,7 +328,7 @@ export default async function DashboardPage({
           </a>
         </div>
 
-        {!isPro && (
+        {!hasActiveSubscription && (
           <div className="mt-6 p-4 rounded-xl bg-drawsports-primary/10 border border-drawsports-primary/30">
             <p className="text-sm text-white">
               {t["dashboard.paid.hint"]}{" "}

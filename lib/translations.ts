@@ -108,6 +108,9 @@ export const translations = {
     "afterPayment.checkEmail": "Revisa tu bandeja de entrada (y la carpeta de spam).",
     "afterPayment.alreadyActive": "¿Ya activaste tu cuenta?",
     "afterPayment.login": "Iniciar sesión",
+    "afterPayment.goToPanel": "Ya tienes sesión iniciada.",
+    "afterPayment.dashboard": "Ir al panel",
+    "afterPayment.refreshHint": "Si acabas de pagar, puede tardar unos segundos. Recarga la página si no ves tu plan.",
   },
   en: {
     // Landing
@@ -218,6 +221,9 @@ export const translations = {
     "afterPayment.checkEmail": "Check your inbox (and spam folder).",
     "afterPayment.alreadyActive": "Already activated your account?",
     "afterPayment.login": "Sign in",
+    "afterPayment.goToPanel": "You're already signed in.",
+    "afterPayment.dashboard": "Go to panel",
+    "afterPayment.refreshHint": "If you just paid, it may take a few seconds. Refresh the page if you don't see your plan.",
   },
 } as const;
 
