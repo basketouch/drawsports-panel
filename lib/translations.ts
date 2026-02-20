@@ -32,7 +32,7 @@ export const translations = {
     "signup.goLogin": "Ir a iniciar sesión",
     "signup.goPanel": "Ir al panel",
     "signup.close": "Cerrar",
-    "signup.teamName": "Nombre del equipo o club (opcional)",
+    "signup.teamName": "Nombre del equipo/Club",
     "signup.teamNamePlaceholder": "Ej: Club Baloncesto Madrid",
 
     // Forgot password
@@ -126,7 +126,7 @@ export const translations = {
     "signup.goLogin": "Go to login",
     "signup.goPanel": "Go to panel",
     "signup.close": "Close",
-    "signup.teamName": "Team or club name (optional)",
+    "signup.teamName": "Team or club name",
     "signup.teamNamePlaceholder": "e.g. Madrid Basketball Club",
 
     // Forgot password
