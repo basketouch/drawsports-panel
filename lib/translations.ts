@@ -102,6 +102,12 @@ export const translations = {
     "setup.teamName.placeholder": "Ej: Club Baloncesto Madrid",
     "setup.teamName.submit": "Continuar",
     "setup.teamName.saving": "Guardando…",
+
+    "afterPayment.title": "¡Gracias por tu compra!",
+    "afterPayment.subtitle": "Te hemos enviado un email para activar tu cuenta y crear tu contraseña.",
+    "afterPayment.checkEmail": "Revisa tu bandeja de entrada (y la carpeta de spam).",
+    "afterPayment.alreadyActive": "¿Ya activaste tu cuenta?",
+    "afterPayment.login": "Iniciar sesión",
   },
   en: {
     // Landing
@@ -206,6 +212,12 @@ export const translations = {
     "setup.teamName.placeholder": "e.g. Madrid Basketball Club",
     "setup.teamName.submit": "Continue",
     "setup.teamName.saving": "Saving…",
+
+    "afterPayment.title": "Thank you for your purchase!",
+    "afterPayment.subtitle": "We've sent you an email to activate your account and create your password.",
+    "afterPayment.checkEmail": "Check your inbox (and spam folder).",
+    "afterPayment.alreadyActive": "Already activated your account?",
+    "afterPayment.login": "Sign in",
   },
 } as const;
 

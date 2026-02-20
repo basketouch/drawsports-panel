@@ -27,6 +27,9 @@ export async function middleware(request: NextRequest) {
   if (pathname === "/login") {
     return NextResponse.redirect(new URL("/es/login", request.url));
   }
+  if (pathname === "/after-payment") {
+    return NextResponse.redirect(new URL("/es/after-payment", request.url));
+  }
   if (pathname === "/signup" || pathname === "/es/signup" || pathname === "/en/signup") {
     const locale = pathname === "/en/signup" ? "en" : "es";
     return NextResponse.redirect(new URL(`/${locale}/login`, request.url));
