@@ -50,7 +50,7 @@ export default async function DashboardPage({
     .maybeSingle();
 
   let org: { seats_limit: number; name: string } | null = null;
-  let orgMembers: { email: string; organization_role: string }[] = [];
+  let orgMembers: { id: string; email: string; organization_role: string }[] = [];
   let orgInvites: { id: string; email: string }[] = [];
   let orgName: string | null = null;
 
