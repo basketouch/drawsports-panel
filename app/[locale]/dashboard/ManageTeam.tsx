@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/supabase/client";
-import { Users, X } from "lucide-react";
+import { Users, X, Plus } from "lucide-react";
 import type { Locale } from "@/lib/translations";
 
 type Member = { id: string; email: string; organization_role: string; consumes_seat?: boolean };
@@ -324,15 +324,27 @@ export function ManageTeam({
               {m.organization_role === "owner" ? t["dashboard.manageTeam.owner"] : t["dashboard.manageTeam.member"]}
             </span>
             {canManage && m.id === currentUserId && m.organization_role === "owner" && (
-              <button
-                type="button"
-                onClick={handleToggleOwnerSeat}
-                disabled={togglingSeat}
-                className="p-1.5 rounded text-red-500 hover:bg-red-500/20 hover:text-red-400 transition-colors disabled:opacity-50 shrink-0"
-                aria-label={(m.consumes_seat ?? true) ? (locale === "es" ? "Liberar mi plaza" : "Release my seat") : (locale === "es" ? "Ocupar plaza" : "Occupy seat")}
-              >
-                <X className="w-4 h-4" />
-              </button>
+              (m.consumes_seat ?? true) ? (
+                <button
+                  type="button"
+                  onClick={handleToggleOwnerSeat}
+                  disabled={togglingSeat}
+                  className="p-1.5 rounded text-red-500 hover:bg-red-500/20 hover:text-red-400 transition-colors disabled:opacity-50 shrink-0"
+                  aria-label={locale === "es" ? "Liberar mi plaza" : "Release my seat"}
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleToggleOwnerSeat}
+                  disabled={togglingSeat}
+                  className="p-1.5 rounded text-drawsports-primary hover:bg-drawsports-primary/20 transition-colors disabled:opacity-50 shrink-0"
+                  aria-label={locale === "es" ? "Ocupar plaza" : "Occupy seat"}
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+              )
             )}
             {canManage && m.id !== currentUserId && (
               <button
