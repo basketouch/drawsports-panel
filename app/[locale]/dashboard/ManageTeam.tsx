@@ -6,7 +6,7 @@ import { createClient } from "@/supabase/client";
 import { Users, X } from "lucide-react";
 import type { Locale } from "@/lib/translations";
 
-type Member = { id: string; email: string; organization_role: string };
+type Member = { id: string; email: string; organization_role: string; consumes_seat?: boolean };
 type Invite = { id: string; email: string };
 
 export function ManageTeam({
@@ -42,9 +42,14 @@ export function ManageTeam({
   const [membersList, setMembersList] = useState(members);
   const [revokingId, setRevokingId] = useState<string | null>(null);
   const [removingId, setRemovingId] = useState<string | null>(null);
+  const [togglingSeat, setTogglingSeat] = useState(false);
 
-  // Solo los members consumen plazas; el owner no cuenta
-  const membersCount = membersList.filter((m) => m.organization_role === "member").length;
+  // Members siempre consumen; owner solo si consumes_seat
+  const membersCount = membersList.reduce((n, m) => {
+    if (m.organization_role === "member") return n + 1;
+    if (m.organization_role === "owner" && (m.consumes_seat ?? true)) return n + 1;
+    return n;
+  }, 0);
   const slotsLeft = seatsLimit - membersCount;
 
   async function handleRevokeInvite(inviteId: string) {
@@ -64,6 +69,55 @@ export function ManageTeam({
     setInvitesList((prev) => prev.filter((i) => i.id !== inviteId));
     setMessage({ type: "success", text: locale === "es" ? "Invitación revocada" : "Invitation revoked" });
     router.refresh();
+  }
+
+  async function handleToggleOwnerSeat() {
+    const owner = membersList.find((m) => m.id === currentUserId && m.organization_role === "owner");
+    if (!owner) return;
+    const newValue = !(owner.consumes_seat ?? true);
+    setTogglingSeat(true);
+    setMessage(null);
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabase = createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.access_token || !supabaseUrl) {
+      setMessage({ type: "error", text: "Sesión expirada." });
+      setTogglingSeat(false);
+      return;
+    }
+    try {
+      const res = await fetch(`${supabaseUrl}/functions/v1/update-org`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({ org_id: orgId, action: "toggle_owner_seat", consumes_seat: newValue }),
+      });
+      const result = (await res.json().catch(() => ({}))) as { success?: boolean; error?: string };
+      setTogglingSeat(false);
+      if (res.ok && result?.success) {
+        setMembersList((prev) =>
+          prev.map((m) => (m.id === currentUserId ? { ...m, consumes_seat: newValue } : m))
+        );
+        setMessage({
+          type: "success",
+          text: newValue
+            ? locale === "es"
+              ? "Plaza ocupada"
+              : "Seat occupied"
+            : locale === "es"
+              ? "Plaza liberada"
+              : "Seat released",
+        });
+        router.refresh();
+      } else {
+        setMessage({ type: "error", text: result?.error || "Error" });
+      }
+    } catch {
+      setTogglingSeat(false);
+      setMessage({ type: "error", text: "Error inesperado" });
+    }
   }
 
   async function handleRemoveMember(memberId: string) {
@@ -269,6 +323,17 @@ export function ManageTeam({
             <span className="text-drawsports-text-muted text-xs shrink-0">
               {m.organization_role === "owner" ? t["dashboard.manageTeam.owner"] : t["dashboard.manageTeam.member"]}
             </span>
+            {canManage && m.id === currentUserId && m.organization_role === "owner" && (
+              <button
+                type="button"
+                onClick={handleToggleOwnerSeat}
+                disabled={togglingSeat}
+                className="p-1.5 rounded text-red-500 hover:bg-red-500/20 hover:text-red-400 transition-colors disabled:opacity-50 shrink-0"
+                aria-label={(m.consumes_seat ?? true) ? (locale === "es" ? "Liberar mi plaza" : "Release my seat") : (locale === "es" ? "Ocupar plaza" : "Occupy seat")}
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
             {canManage && m.id !== currentUserId && (
               <button
                 type="button"

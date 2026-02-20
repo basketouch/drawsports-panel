@@ -50,7 +50,7 @@ export default async function DashboardPage({
     .maybeSingle();
 
   let org: { seats_limit: number; name: string } | null = null;
-  let orgMembers: { id: string; email: string; organization_role: string }[] = [];
+  let orgMembers: { id: string; email: string; organization_role: string; consumes_seat?: boolean }[] = [];
   let orgInvites: { id: string; email: string }[] = [];
   let orgName: string | null = null;
 
@@ -71,12 +71,13 @@ export default async function DashboardPage({
       : { seats_limit: 3, name: "Mi equipo" };
     const { data: membersData } = await supabase
       .from("profiles")
-      .select("id, email, organization_role")
+      .select("id, email, organization_role, consumes_seat")
       .eq("organization_id", profile.organization_id);
     orgMembers = (membersData ?? []).map((m) => ({
       id: m.id,
       email: m.email ?? "",
       organization_role: m.organization_role ?? "member",
+      consumes_seat: m.consumes_seat ?? true,
     }));
 
     // Solo el owner ve invitados y puede gestionar (editar, remover)
