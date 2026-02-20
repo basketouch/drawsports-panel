@@ -39,13 +39,6 @@ export default async function DashboardPage({
     error: userError,
   } = await supabase.auth.getUser();
 
-  // DEBUG: logs temporales
-  console.log("[Dashboard DEBUG] getUser:", {
-    hasUser: !!user,
-    userId: user?.id,
-    userError: userError?.message ?? null,
-  });
-
   if (!user) {
     redirect(`/${locale}/login`);
   }
@@ -56,20 +49,13 @@ export default async function DashboardPage({
     .eq("id", user.id)
     .maybeSingle();
 
-  // DEBUG: logs temporales para diagnosticar perfil
-  console.log("[Dashboard DEBUG] profile:", {
-    hasProfile: !!profile,
-    profileEmail: profile?.email,
-    isPro: profile?.is_pro,
-    organizationId: profile?.organization_id,
-    profileError: profileError?.message ?? null,
-    profileErrorCode: profileError?.code ?? null,
-  });
-
   let org: { seats_limit: number; name: string } | null = null;
   let orgMembers: { email: string; organization_role: string }[] = [];
   let orgInvites: { id: string; email: string }[] = [];
   let orgName: string | null = null;
+
+  const isOwner = profile?.organization_role === "owner";
+  const isMember = profile?.organization_role === "member";
 
   if (profile?.organization_id) {
     const { data: orgData } = await supabase
@@ -79,20 +65,22 @@ export default async function DashboardPage({
       .single();
     orgName = orgData?.name ?? null;
 
-    if (profile.organization_role === "owner") {
-      // Fallback si RLS bloquea la lectura de organizations: usar valores por defecto
-      org = orgData
-        ? { seats_limit: orgData.seats_limit, name: orgData.name ?? "Mi equipo" }
-        : { seats_limit: 3, name: "Mi equipo" };
-      const { data: membersData } = await supabase
-        .from("profiles")
-        .select("id, email, organization_role")
-        .eq("organization_id", profile.organization_id);
-      orgMembers = (membersData ?? []).map((m) => ({
-        id: m.id,
-        email: m.email ?? "",
-        organization_role: m.organization_role ?? "member",
-      }));
+    // Owner y member ven el equipo; solo owner carga invites y puede gestionar
+    org = orgData
+      ? { seats_limit: orgData.seats_limit, name: orgData.name ?? "Mi equipo" }
+      : { seats_limit: 3, name: "Mi equipo" };
+    const { data: membersData } = await supabase
+      .from("profiles")
+      .select("id, email, organization_role")
+      .eq("organization_id", profile.organization_id);
+    orgMembers = (membersData ?? []).map((m) => ({
+      id: m.id,
+      email: m.email ?? "",
+      organization_role: m.organization_role ?? "member",
+    }));
+
+    // Solo el owner ve invitados y puede gestionar (editar, remover)
+    if (isOwner) {
       const { data: invitesData } = await supabase
         .from("organization_invites")
         .select("id, email")
@@ -101,9 +89,6 @@ export default async function DashboardPage({
       orgInvites = (invitesData ?? []).map((i) => ({ id: i.id, email: i.email ?? "" }));
     }
   }
-
-
-  const isMember = profile?.organization_role === "member";
 
   if (profileError) {
     console.error("[Dashboard] profiles fetch error:", profileError);
@@ -230,7 +215,7 @@ export default async function DashboardPage({
           </div>
         </div>
 
-        {/* Gestionar equipo - con org: ManageTeam; sin org: placeholder para que se vea el espacio */}
+        {/* Equipo: owner gestiona; member solo ve (sin invites, sin remove) */}
         {org && profile?.organization_id ? (
           <ManageTeam
             orgId={profile.organization_id}
@@ -239,6 +224,7 @@ export default async function DashboardPage({
             members={orgMembers}
             invites={orgInvites}
             currentUserId={user.id}
+            canManage={isOwner}
             locale={locale as Locale}
             t={t}
           />

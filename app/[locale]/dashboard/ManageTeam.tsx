@@ -16,6 +16,7 @@ export function ManageTeam({
   members,
   invites,
   currentUserId,
+  canManage,
   locale,
   t,
 }: {
@@ -25,6 +26,7 @@ export function ManageTeam({
   members: Member[];
   invites: Invite[];
   currentUserId: string;
+  canManage: boolean;
   locale: Locale;
   t: Record<string, string>;
 }) {
@@ -171,7 +173,7 @@ export function ManageTeam({
         <h3 className="text-drawsports-text-muted text-sm font-medium uppercase tracking-wider mb-2">
           {t["dashboard.teamName"]}
         </h3>
-        {isEditingName ? (
+        {canManage && isEditingName ? (
           <form onSubmit={handleSaveTeamName} className="flex flex-wrap gap-2 items-center">
             <input
               type="text"
@@ -204,28 +206,34 @@ export function ManageTeam({
         ) : (
           <div className="flex items-center gap-2">
             <p className="text-white font-medium">{orgName}</p>
-            <button
-              type="button"
-              onClick={() => setIsEditingName(true)}
-              className="text-drawsports-primary hover:underline text-sm font-medium"
-            >
-              {t["dashboard.teamName.edit"]}
-            </button>
+            {canManage && (
+              <button
+                type="button"
+                onClick={() => setIsEditingName(true)}
+                className="text-drawsports-primary hover:underline text-sm font-medium"
+              >
+                {t["dashboard.teamName.edit"]}
+              </button>
+            )}
           </div>
         )}
       </div>
-      <h3 className="text-drawsports-text-muted text-sm font-medium uppercase tracking-wider mb-4 flex items-center gap-2">
-        <Users className="w-4 h-4" />
-        {t["dashboard.manageTeam"]}
-      </h3>
-      <p className="text-drawsports-text-muted text-sm mb-4">
-        {t["dashboard.manageTeam.desc"]}
-      </p>
-      <p className="text-white text-sm mb-4">
-        {t["dashboard.manageTeam.seats"]}: {membersList.length} / {seatsLimit}
-      </p>
+      {canManage && (
+        <>
+          <h3 className="text-drawsports-text-muted text-sm font-medium uppercase tracking-wider mb-4 flex items-center gap-2">
+            <Users className="w-4 h-4" />
+            {t["dashboard.manageTeam"]}
+          </h3>
+          <p className="text-drawsports-text-muted text-sm mb-4">
+            {t["dashboard.manageTeam.desc"]}
+          </p>
+          <p className="text-white text-sm mb-4">
+            {t["dashboard.manageTeam.seats"]}: {membersList.length} / {seatsLimit}
+          </p>
+        </>
+      )}
 
-      {slotsLeft > 0 && (
+      {canManage && slotsLeft > 0 && (
         <form onSubmit={handleAdd} className="flex flex-wrap gap-2 mb-4">
           <input
             type="email"
@@ -245,12 +253,13 @@ export function ManageTeam({
         </form>
       )}
 
-      {message && (
+      {canManage && message && (
         <p className={`text-sm mb-4 ${message.type === "success" ? "text-green-400" : "text-red-400"}`}>
           {message.text}
         </p>
       )}
 
+      {canManage && (
       <div className="space-y-2">
         {membersList.map((m) => (
           <div key={m.id} className="flex items-center justify-between gap-2 py-2 border-b border-white/5 last:border-0">
@@ -258,7 +267,7 @@ export function ManageTeam({
             <span className="text-drawsports-text-muted text-xs shrink-0">
               {m.organization_role === "owner" ? t["dashboard.manageTeam.owner"] : t["dashboard.manageTeam.member"]}
             </span>
-            {m.organization_role === "member" && (
+            {canManage && m.id !== currentUserId && (
               <button
                 type="button"
                 onClick={() => handleRemoveMember(m.id)}
@@ -271,7 +280,7 @@ export function ManageTeam({
             )}
           </div>
         ))}
-        {invitesList.map((inv) => (
+        {canManage && invitesList.map((inv) => (
           <div key={inv.id} className="flex items-center justify-between gap-2 py-2 border-b border-white/5 last:border-0">
             <span className="text-drawsports-text-muted flex-1">{inv.email}</span>
             <span className="text-drawsports-text-muted text-xs shrink-0">
@@ -289,6 +298,7 @@ export function ManageTeam({
           </div>
         ))}
       </div>
+      )}
     </div>
   );
 }
