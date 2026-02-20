@@ -34,25 +34,15 @@ export default async function DashboardPage({
   const t = translations[locale as Locale];
 
   const supabase = await createClient();
-  const { data: sessionData } = await supabase.auth.getSession();
   const {
-    data: { user: userFromGetUser },
+    data: { user },
     error: userError,
   } = await supabase.auth.getUser();
 
-  // Fallback: en algunos entornos (Vercel serverless) getUser() puede fallar aunque la sesión exista
-  const user = userFromGetUser ?? sessionData?.session?.user ?? null;
-
-  // DEBUG: logs temporales para diagnosticar sesión/perfil
-  console.log("[Dashboard DEBUG] session:", {
-    hasSession: !!sessionData?.session,
-    sessionUserId: sessionData?.session?.user?.id,
-  });
+  // DEBUG: logs temporales
   console.log("[Dashboard DEBUG] getUser:", {
-    hasUserFromGetUser: !!userFromGetUser,
-    hasUserFallback: !!user,
+    hasUser: !!user,
     userId: user?.id,
-    userEmail: user?.email,
     userError: userError?.message ?? null,
   });
 

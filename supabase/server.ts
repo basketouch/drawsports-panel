@@ -19,7 +19,6 @@ export async function createClient() {
           return cookieStore.getAll();
         },
         setAll(cookiesToSet: Parameters<SetAllCookies>[0]) {
-          const isProd = process.env.NODE_ENV === "production";
           try {
             cookiesToSet.forEach(({ name, value, options }) => {
               const { path, maxAge, expires, domain, secure, httpOnly, sameSite } = options ?? {};
@@ -28,9 +27,9 @@ export async function createClient() {
                 ...(maxAge != null && { maxAge }),
                 ...(expires != null && { expires }),
                 ...(domain != null && { domain }),
-                secure: secure ?? isProd,
+                ...(secure != null && { secure }),
                 ...(httpOnly != null && { httpOnly }),
-                sameSite: (sameSite as "lax" | "strict" | "none") ?? "lax",
+                ...(sameSite != null && { sameSite }),
               });
             });
           } catch {
