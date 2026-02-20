@@ -13,14 +13,17 @@ export default function AfterPaymentPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#1a0f0f] px-4">
-      <a href={locale === "en" ? "https://drawsports.app/pro/en/" : "https://drawsports.app/pro/"} className="mb-8 block">
+      <a href={locale === "en" ? "https://drawsports.app/pro/en/" : "https://drawsports.app/pro/"} className="mb-8 block text-center">
         <Image
           src="/imagenes/logo.png"
           alt="DrawSports"
           width={80}
           height={80}
-          className="rounded-[22%] shadow-drawsports-card"
+          className="rounded-[22%] shadow-drawsports-card mx-auto"
         />
+        <span className="block mt-2 text-xl font-bold text-drawsports-primary tracking-[0.2em]">
+          DrawSports
+        </span>
       </a>
       <div className="w-full max-w-md">
         <div className="bg-drawsports-bg-card rounded-2xl p-8 border border-white/5 shadow-drawsports-card text-center">
