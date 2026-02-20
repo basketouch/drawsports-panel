@@ -14,7 +14,7 @@ export function LogoutButton({ locale }: { locale: Locale }) {
   async function handleLogout() {
     const supabase = createClient();
     await supabase.auth.signOut();
-    router.push(`/${locale}`);
+    router.push(`/${locale}/login`);
     router.refresh();
   }
 
