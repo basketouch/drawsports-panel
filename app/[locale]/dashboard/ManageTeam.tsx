@@ -43,7 +43,9 @@ export function ManageTeam({
   const [revokingId, setRevokingId] = useState<string | null>(null);
   const [removingId, setRemovingId] = useState<string | null>(null);
 
-  const slotsLeft = seatsLimit - membersList.length;
+  // Solo los members consumen plazas; el owner no cuenta
+  const membersCount = membersList.filter((m) => m.organization_role === "member").length;
+  const slotsLeft = seatsLimit - membersCount;
 
   async function handleRevokeInvite(inviteId: string) {
     setRevokingId(inviteId);
@@ -228,7 +230,7 @@ export function ManageTeam({
             {t["dashboard.manageTeam.desc"]}
           </p>
           <p className="text-white text-sm mb-4">
-            {t["dashboard.manageTeam.seats"]}: {membersList.length} / {seatsLimit}
+            {t["dashboard.manageTeam.seats"]}: {membersCount} / {seatsLimit}
           </p>
         </>
       )}
