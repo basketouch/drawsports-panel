@@ -3,7 +3,6 @@ import { createClient } from "@/supabase/server";
 import { CheckCircle, XCircle, Calendar, Download, Mail, Zap, Users } from "lucide-react";
 import { LogoutButton } from "./LogoutButton";
 import { ManageTeam } from "./ManageTeam";
-import { SyncLicenseButton } from "./SyncLicenseButton";
 import Link from "next/link";
 import Image from "next/image";
 import { translations, type Locale } from "@/lib/translations";
@@ -255,10 +254,16 @@ export default async function DashboardPage({
                   href={getCheckoutUrl(variant.checkoutId, email)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block p-4 rounded-xl border border-white/10 hover:border-drawsports-primary hover:shadow-drawsports-glow transition-all duration-200 text-center"
+                  className="block p-5 rounded-xl border border-white/10 hover:border-drawsports-primary hover:shadow-drawsports-glow transition-all duration-200 text-center"
                 >
-                  <p className="text-white font-bold text-lg">{variant.users} {t["dashboard.users"]}</p>
-                  <p className="text-drawsports-primary text-sm font-medium mt-2">
+                  <p className="text-white font-bold text-xl">{variant.users} {t["dashboard.users"]}</p>
+                  <p className="text-drawsports-primary font-bold text-lg mt-2">
+                    {variant.price}/{t["dashboard.periodYear"]}
+                  </p>
+                  <p className="text-drawsports-text-muted text-xs mt-1">
+                    {t["dashboard.subscriptionAnnual"]}
+                  </p>
+                  <p className="text-drawsports-primary text-sm font-medium mt-3">
                     {t["dashboard.buyPlan"]} →
                   </p>
                 </a>
@@ -309,11 +314,7 @@ export default async function DashboardPage({
         </div>
 
         {!isPro && (
-          <div className="mt-6 p-4 rounded-xl bg-drawsports-primary/10 border border-drawsports-primary/30 space-y-2">
-            <p className="text-sm text-white">
-              {t["dashboard.refreshHint"]}
-            </p>
-            <SyncLicenseButton locale={locale as Locale} label={t["dashboard.syncLicense"]} />
+          <div className="mt-6 p-4 rounded-xl bg-drawsports-primary/10 border border-drawsports-primary/30">
             <p className="text-sm text-white">
               {t["dashboard.paid.hint"]}{" "}
               <a
