@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/supabase/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { PasswordInput } from "@/components/PasswordInput";
 
 export default function UpdatePasswordPage() {
   const [password, setPassword] = useState("");
@@ -56,30 +57,32 @@ export default function UpdatePasswordPage() {
               <label htmlFor="password" className="block text-sm font-medium text-drawsports-text-muted mb-1">
                 New password
               </label>
-              <input
+              <PasswordInput
                 id="password"
-                type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength={6}
-                className="w-full px-4 py-3 rounded-xl bg-[#1a0f0f] border border-white/10 text-white placeholder-white/40 focus:ring-2 focus:ring-drawsports-primary focus:border-drawsports-primary"
                 placeholder="At least 6 characters"
+                className="w-full px-4 py-3 pr-10 rounded-xl bg-[#1a0f0f] border border-white/10 text-white placeholder-white/40 focus:ring-2 focus:ring-drawsports-primary focus:border-drawsports-primary"
+                ariaLabelShow="Show password"
+                ariaLabelHide="Hide password"
               />
             </div>
             <div>
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-drawsports-text-muted mb-1">
                 Confirm password
               </label>
-              <input
+              <PasswordInput
                 id="confirmPassword"
-                type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
                 minLength={6}
-                className="w-full px-4 py-3 rounded-xl bg-[#1a0f0f] border border-white/10 text-white placeholder-white/40 focus:ring-2 focus:ring-drawsports-primary focus:border-drawsports-primary"
                 placeholder="Repeat password"
+                className="w-full px-4 py-3 pr-10 rounded-xl bg-[#1a0f0f] border border-white/10 text-white placeholder-white/40 focus:ring-2 focus:ring-drawsports-primary focus:border-drawsports-primary"
+                ariaLabelShow="Show password"
+                ariaLabelHide="Hide password"
               />
             </div>
             {error && <p className="text-drawsports-primary text-sm">{error}</p>}

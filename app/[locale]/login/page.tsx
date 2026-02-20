@@ -6,6 +6,7 @@ import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { translations, type Locale } from "@/lib/translations";
+import { PasswordInput } from "@/components/PasswordInput";
 
 export default function LoginPage() {
   const params = useParams();
@@ -80,13 +81,13 @@ export default function LoginPage() {
               >
                 {t["login.password"]}
               </label>
-              <input
+              <PasswordInput
                 id="password"
-                type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full px-4 py-3 rounded-xl bg-[#1a0f0f] border border-white/10 text-white placeholder-white/40 focus:ring-2 focus:ring-drawsports-primary focus:border-drawsports-primary transition-all"
+                ariaLabelShow={locale === "es" ? "Mostrar contraseña" : "Show password"}
+                ariaLabelHide={locale === "es" ? "Ocultar contraseña" : "Hide password"}
               />
             </div>
             {error && (
