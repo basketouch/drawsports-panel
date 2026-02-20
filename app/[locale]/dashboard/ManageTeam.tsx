@@ -3,16 +3,18 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/supabase/client";
-import { Users } from "lucide-react";
+import { Users, X } from "lucide-react";
 import type { Locale } from "@/lib/translations";
 
 type Member = { email: string; organization_role: string };
+type Invite = { id: string; email: string };
 
 export function ManageTeam({
   orgId,
   orgName: initialOrgName,
   seatsLimit,
   members,
+  invites,
   locale,
   t,
 }: {
@@ -20,6 +22,7 @@ export function ManageTeam({
   orgName: string;
   seatsLimit: number;
   members: Member[];
+  invites: Invite[];
   locale: Locale;
   t: Record<string, string>;
 }) {
@@ -31,8 +34,29 @@ export function ManageTeam({
   const [orgNameEdit, setOrgNameEdit] = useState(initialOrgName);
   const [savingName, setSavingName] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
+  const [invitesList, setInvitesList] = useState(invites);
+  const [revokingId, setRevokingId] = useState<string | null>(null);
 
   const slotsLeft = seatsLimit - members.length;
+
+  async function handleRevokeInvite(inviteId: string) {
+    setRevokingId(inviteId);
+    setMessage(null);
+    const supabase = createClient();
+    const { error } = await supabase
+      .from("organization_invites")
+      .delete()
+      .eq("id", inviteId)
+      .eq("organization_id", orgId);
+    setRevokingId(null);
+    if (error) {
+      setMessage({ type: "error", text: error.message });
+      return;
+    }
+    setInvitesList((prev) => prev.filter((i) => i.id !== inviteId));
+    setMessage({ type: "success", text: locale === "es" ? "Invitación revocada" : "Invitation revoked" });
+    router.refresh();
+  }
 
   async function handleSaveTeamName(e: React.FormEvent) {
     e.preventDefault();
@@ -194,6 +218,23 @@ export function ManageTeam({
             <span className="text-drawsports-text-muted text-xs">
               {m.organization_role === "owner" ? t["dashboard.manageTeam.owner"] : t["dashboard.manageTeam.member"]}
             </span>
+          </div>
+        ))}
+        {invitesList.map((inv) => (
+          <div key={inv.id} className="flex items-center justify-between gap-2 py-2 border-b border-white/5 last:border-0">
+            <span className="text-drawsports-text-muted flex-1">{inv.email}</span>
+            <span className="text-drawsports-text-muted text-xs shrink-0">
+              {locale === "es" ? "Pendiente" : "Pending"}
+            </span>
+            <button
+              type="button"
+              onClick={() => handleRevokeInvite(inv.id)}
+              disabled={revokingId === inv.id}
+              className="p-1.5 rounded text-red-500 hover:bg-red-500/20 hover:text-red-400 transition-colors disabled:opacity-50 shrink-0"
+              aria-label={locale === "es" ? "Revocar invitación" : "Revoke invitation"}
+            >
+              <X className="w-4 h-4" />
+            </button>
           </div>
         ))}
       </div>

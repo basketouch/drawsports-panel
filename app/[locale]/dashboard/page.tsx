@@ -68,6 +68,7 @@ export default async function DashboardPage({
 
   let org: { seats_limit: number; name: string } | null = null;
   let orgMembers: { email: string; organization_role: string }[] = [];
+  let orgInvites: { id: string; email: string }[] = [];
   let orgName: string | null = null;
 
   if (profile?.organization_id) {
@@ -91,6 +92,12 @@ export default async function DashboardPage({
         email: m.email ?? "",
         organization_role: m.organization_role ?? "member",
       }));
+      const { data: invitesData } = await supabase
+        .from("organization_invites")
+        .select("id, email")
+        .eq("organization_id", profile.organization_id)
+        .eq("status", "pending");
+      orgInvites = (invitesData ?? []).map((i) => ({ id: i.id, email: i.email ?? "" }));
     }
   }
 
@@ -229,6 +236,7 @@ export default async function DashboardPage({
             orgName={org.name}
             seatsLimit={org.seats_limit}
             members={orgMembers}
+            invites={orgInvites}
             locale={locale as Locale}
             t={t}
           />
