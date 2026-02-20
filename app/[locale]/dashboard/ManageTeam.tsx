@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/supabase/client";
 import { Users } from "lucide-react";
 import type { Locale } from "@/lib/translations";
@@ -25,6 +26,7 @@ export function ManageTeam({
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const router = useRouter();
   const [orgName, setOrgName] = useState(initialOrgName);
   const [orgNameEdit, setOrgNameEdit] = useState(initialOrgName);
   const [savingName, setSavingName] = useState(false);
@@ -59,6 +61,7 @@ export function ManageTeam({
         setOrgName(orgNameEdit.trim());
         setIsEditingName(false);
         setMessage({ type: "success", text: t["dashboard.teamName.updated"] });
+        router.refresh(); // Actualiza la tarjeta TEAM del dashboard
       } else {
         setMessage({ type: "error", text: result?.error || "Error" });
       }
