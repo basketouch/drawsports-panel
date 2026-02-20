@@ -8,8 +8,8 @@ export function LanguageSelector() {
   const pathWithoutLocale = pathname?.replace(/^\/(es|en)/, "") || "";
   const currentLocale = pathname?.startsWith("/en") ? "en" : "es";
 
-  const esHref = pathWithoutLocale ? `/es${pathWithoutLocale}` : "/es";
-  const enHref = pathWithoutLocale ? `/en${pathWithoutLocale}` : "/en";
+  const esHref = pathWithoutLocale ? `/es${pathWithoutLocale}` : "/es/login";
+  const enHref = pathWithoutLocale ? `/en${pathWithoutLocale}` : "/en/login";
 
   return (
     <div className="fixed top-2.5 right-2.5 sm:top-5 sm:right-5 z-[1000] flex gap-2.5">

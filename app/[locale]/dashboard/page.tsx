@@ -111,7 +111,7 @@ export default async function DashboardPage({
     <div className="min-h-screen bg-[#1a0f0f]">
       <header className="bg-drawsports-bg-card border-b border-white/5">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href={`/${locale}`} className="flex items-center gap-3">
+          <Link href={`/${locale}/dashboard`} className="flex items-center gap-3">
             <Image
               src="/imagenes/logo.png"
               alt="DrawSports"
