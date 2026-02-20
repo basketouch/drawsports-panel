@@ -15,6 +15,7 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet: Parameters<SetAllCookies>[0]) {
+          const isProd = process.env.NODE_ENV === "production";
           cookiesToSet.forEach(({ name, value, options }) => {
             const { path, maxAge, expires, domain, secure, httpOnly, sameSite } = options ?? {};
             supabaseResponse.cookies.set(name, value, {
@@ -22,9 +23,9 @@ export async function updateSession(request: NextRequest) {
               ...(maxAge != null && { maxAge }),
               ...(expires != null && { expires }),
               ...(domain != null && { domain }),
-              ...(secure != null && { secure }),
+              secure: secure ?? isProd,
               ...(httpOnly != null && { httpOnly }),
-              ...(sameSite != null && { sameSite }),
+              sameSite: (sameSite as "lax" | "strict" | "none") ?? "lax",
             });
           });
         },

@@ -4,9 +4,8 @@ import { LanguageSelector } from "@/components/LanguageSelector";
 
 const locales: Locale[] = ["es", "en"];
 
-export function generateStaticParams() {
-  return locales.map((locale) => ({ locale }));
-}
+// Evitar pre-render estático que puede causar sesión vacía en dashboard
+export const dynamic = "force-dynamic";
 
 export default async function LocaleLayout({
   children,
