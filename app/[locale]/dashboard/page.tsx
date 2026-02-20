@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/supabase/server";
-import { CheckCircle, XCircle, Calendar, Download, Mail, Zap } from "lucide-react";
+import { CheckCircle, XCircle, Calendar, Download, Mail, Zap, Users } from "lucide-react";
 import { LogoutButton } from "./LogoutButton";
 import { ManageTeam } from "./ManageTeam";
 import { SyncLicenseButton } from "./SyncLicenseButton";
@@ -151,8 +151,8 @@ export default async function DashboardPage({
           </div>
         </div>
 
-        {/* Grid de cards: Plan, Equipo, Fechas */}
-        <div className={`grid gap-6 mb-8 ${isPro && (orgName || profile?.organization_id) ? "md:grid-cols-3" : "md:grid-cols-2"}`}>
+        {/* Grid de cards: Plan, Equipo, Fechas - siempre 3 columnas para que se vea el espacio del equipo */}
+        <div className="grid gap-6 mb-8 md:grid-cols-3">
           {/* Plan */}
           <div className="bg-drawsports-bg-card rounded-2xl border border-white/5 shadow-drawsports-card p-6 min-h-[180px] flex flex-col">
             <h3 className="text-drawsports-text-muted text-sm font-medium uppercase tracking-wider mb-4">
@@ -164,15 +164,20 @@ export default async function DashboardPage({
             </p>
           </div>
 
-          {/* Equipo (owners y members) - mostrar si isPro y tiene org */}
-          {isPro && profile?.organization_id ? (
-            <div className="bg-drawsports-bg-card rounded-2xl border border-white/5 shadow-drawsports-card p-6 min-h-[180px] flex flex-col">
-              <h3 className="text-drawsports-text-muted text-sm font-medium uppercase tracking-wider mb-4">
-                {t["dashboard.team"]}
-              </h3>
+          {/* Equipo - siempre visible: con datos si tiene org, placeholder si no */}
+          <div className="bg-drawsports-bg-card rounded-2xl border border-white/5 shadow-drawsports-card p-6 min-h-[180px] flex flex-col">
+            <h3 className="text-drawsports-text-muted text-sm font-medium uppercase tracking-wider mb-4">
+              {t["dashboard.team"]}
+            </h3>
+            {isPro && profile?.organization_id ? (
               <p className="text-white font-medium flex-1">{orgName || "Mi equipo"}</p>
-            </div>
-          ) : null}
+            ) : (
+              <div className="flex-1">
+                <p className="text-drawsports-text-muted text-sm">{t["dashboard.team.noTeam"]}</p>
+                <p className="text-drawsports-text-muted text-xs mt-2">{t["dashboard.team.choosePlan"]}</p>
+              </div>
+            )}
+          </div>
 
           {/* Fechas - siempre visible, con datos que tengamos */}
           <div className="bg-drawsports-bg-card rounded-2xl border border-white/5 shadow-drawsports-card p-6 min-h-[180px] flex flex-col">
@@ -217,8 +222,8 @@ export default async function DashboardPage({
           </div>
         </div>
 
-        {/* Gestionar equipo - solo para owners */}
-        {org && profile?.organization_id && (
+        {/* Gestionar equipo - con org: ManageTeam; sin org: placeholder para que se vea el espacio */}
+        {org && profile?.organization_id ? (
           <ManageTeam
             orgId={profile.organization_id}
             orgName={org.name}
@@ -227,7 +232,18 @@ export default async function DashboardPage({
             locale={locale as Locale}
             t={t}
           />
-        )}
+        ) : !isMember ? (
+          <div className="bg-drawsports-bg-card rounded-2xl border border-white/5 shadow-drawsports-card p-6 mb-8">
+            <h3 className="text-drawsports-text-muted text-sm font-medium uppercase tracking-wider mb-2 flex items-center gap-2">
+              <Users className="w-4 h-4" />
+              {t["dashboard.manageTeam"]}
+            </h3>
+            <p className="text-drawsports-text-muted text-sm mb-4">
+              {t["dashboard.team.choosePlan"]}
+            </p>
+            <p className="text-white text-sm">{t["dashboard.choosePlan"]} ↓</p>
+          </div>
+        ) : null}
 
         {/* Planes de compra - solo para owners (los members no compran) */}
         {!isMember && (
