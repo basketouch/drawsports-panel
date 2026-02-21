@@ -9,12 +9,19 @@ import Image from "next/image";
 import { translations, type Locale } from "@/lib/translations";
 import { LEMON_SQUEEZY_VARIANTS, getCheckoutUrl } from "@/lib/lemonsqueezy";
 
-function formatDate(date: Date, locale: string) {
+function formatDate(date: Date, locale: string): string {
+  if (typeof date?.getTime !== "function" || Number.isNaN(date.getTime())) return "—";
   return date.toLocaleDateString(locale === "es" ? "es-ES" : "en-GB", {
     day: "numeric",
     month: "long",
     year: "numeric",
   });
+}
+
+function parseDate(value: string | null | undefined): Date | null {
+  if (value == null || typeof value !== "string" || !value.trim()) return null;
+  const d = new Date(value);
+  return Number.isNaN(d.getTime()) ? null : d;
 }
 
 function daysBetween(from: Date, to: Date): number {
@@ -31,7 +38,8 @@ export default async function DashboardPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const t = translations[locale as Locale];
+  const safeLocale = (locale === "en" ? "en" : "es") as Locale;
+  const t = translations[safeLocale] ?? translations.es;
 
   const supabase = await createClient();
   const {
@@ -97,16 +105,12 @@ export default async function DashboardPage({
 
   const email = profile?.email ?? user.email ?? "";
   const isPro = profile?.is_pro ?? false;
-  const subscriptionStart = profile?.subscription_start
-    ? new Date(profile.subscription_start)
-    : null;
-  const subscriptionEnd = profile?.subscription_end
-    ? new Date(profile.subscription_end)
-    : null;
+  const subscriptionStart = parseDate(profile?.subscription_start ?? undefined);
+  const subscriptionEnd = parseDate(profile?.subscription_end ?? undefined);
 
   const today = new Date();
-  const orgSubscriptionEnd = org?.subscription_end ? new Date(org.subscription_end) : null;
-  const orgSubscriptionStart = org?.subscription_start ? new Date(org.subscription_start) : null;
+  const orgSubscriptionEnd = parseDate(org?.subscription_end ?? undefined);
+  const orgSubscriptionStart = parseDate(org?.subscription_start ?? undefined);
   const effectiveStart = subscriptionStart || orgSubscriptionStart;
   const effectiveEnd = subscriptionEnd || orgSubscriptionEnd;
 
@@ -115,7 +119,10 @@ export default async function DashboardPage({
     isPro ||
     (!!profile?.organization_id && (!effectiveEnd || effectiveEnd > today));
 
-  const daysLeft = effectiveEnd && hasActiveSubscription ? daysBetween(today, effectiveEnd) : 0;
+  const daysLeft =
+    effectiveEnd && hasActiveSubscription && !Number.isNaN(effectiveEnd.getTime())
+      ? Math.max(0, daysBetween(today, effectiveEnd))
+      : 0;
   const isExpired = effectiveEnd ? today > effectiveEnd : false;
 
   return (
@@ -132,7 +139,7 @@ export default async function DashboardPage({
             />
             <span className="text-xl font-bold text-white">{t["dashboard.title"]}</span>
           </Link>
-          <LogoutButton locale={locale as Locale} />
+          <LogoutButton locale={safeLocale} />
         </div>
       </header>
 
@@ -141,7 +148,7 @@ export default async function DashboardPage({
         {hasActiveSubscription && isOwner && profile?.organization_id && needsTeamSetup(orgName) && (
           <SetupTeamName
             orgId={profile.organization_id}
-            locale={locale as Locale}
+            locale={safeLocale}
             t={t}
           />
         )}
@@ -245,7 +252,7 @@ export default async function DashboardPage({
             invites={orgInvites}
             currentUserId={user.id}
             canManage={isOwner}
-            locale={locale as Locale}
+            locale={safeLocale}
             t={t}
           />
         ) : !isMember && !hasActiveSubscription ? (
