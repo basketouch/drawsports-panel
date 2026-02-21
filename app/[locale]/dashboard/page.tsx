@@ -31,17 +31,20 @@ function daysBetween(from: Date, to: Date): number {
 
 // Evitar caché: siempre datos frescos tras pago en Lemon Squeezy
 export const dynamic = "force-dynamic";
+// Forzar Node.js (evita problemas con cookies/Edge en producción)
+export const runtime = "nodejs";
 
 export default async function DashboardPage({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await params;
-  const safeLocale = (locale === "en" ? "en" : "es") as Locale;
-  const t = translations[safeLocale] ?? translations.es;
+  try {
+    const { locale } = await params;
+    const safeLocale = (locale === "en" ? "en" : "es") as Locale;
+    const t = translations[safeLocale] ?? translations.es;
 
-  const supabase = await createClient();
+    const supabase = await createClient();
   const {
     data: { user },
     error: userError,
@@ -210,7 +213,7 @@ export default async function DashboardPage({
                   <Calendar className="w-5 h-5 text-drawsports-primary flex-shrink-0" />
                   <div>
                     <p className="text-drawsports-text-muted text-xs">{t["dashboard.purchase"]}</p>
-                    <p className="text-white font-medium">{formatDate(effectiveStart, locale)}</p>
+                    <p className="text-white font-medium">{formatDate(effectiveStart, safeLocale)}</p>
                   </div>
                 </div>
               )}
@@ -219,7 +222,7 @@ export default async function DashboardPage({
                   <Calendar className="w-5 h-5 text-drawsports-primary flex-shrink-0" />
                   <div>
                     <p className="text-drawsports-text-muted text-xs">{t["dashboard.end"]}</p>
-                    <p className="text-white font-medium">{formatDate(effectiveEnd, locale)}</p>
+                    <p className="text-white font-medium">{formatDate(effectiveEnd, safeLocale)}</p>
                     <p className="text-drawsports-primary text-sm font-medium mt-1">
                       {isExpired
                         ? t["dashboard.expired"]
@@ -360,4 +363,21 @@ export default async function DashboardPage({
       </footer>
     </div>
   );
+  } catch (err) {
+    console.error("[Dashboard] Server Component error:", err);
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-[#1a0f0f] p-8">
+        <h1 className="text-2xl font-bold text-white mb-4">Error al cargar el panel</h1>
+        <p className="text-drawsports-text-muted text-center max-w-md mb-6">
+          Ha ocurrido un error. Por favor, recarga la página o intenta más tarde.
+        </p>
+        <a
+          href="/es/dashboard"
+          className="px-6 py-3 rounded-[50px] bg-drawsports-primary text-white font-bold shadow-drawsports-glow hover:opacity-90"
+        >
+          Reintentar
+        </a>
+      </div>
+    );
+  }
 }
