@@ -73,7 +73,7 @@ export default async function DashboardPage({
       .from("organizations")
       .select("seats_limit, name, subscription_start, subscription_end")
       .eq("id", profile.organization_id)
-      .single();
+      .maybeSingle();
     orgName = orgData?.name ?? null;
 
     // Owner y member ven el equipo; solo owner carga invites y puede gestionar
@@ -364,13 +364,19 @@ export default async function DashboardPage({
     </div>
   );
   } catch (err) {
+    const errMsg = err instanceof Error ? err.message : String(err);
     console.error("[Dashboard] Server Component error:", err);
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-[#1a0f0f] p-8">
         <h1 className="text-2xl font-bold text-white mb-4">Error al cargar el panel</h1>
-        <p className="text-drawsports-text-muted text-center max-w-md mb-6">
+        <p className="text-drawsports-text-muted text-center max-w-md mb-2">
           Ha ocurrido un error. Por favor, recarga la página o intenta más tarde.
         </p>
+        {(process.env.NODE_ENV === "development" || process.env.NEXT_PUBLIC_DEBUG_ERRORS === "1") && (
+          <p className="text-drawsports-primary/80 text-sm font-mono max-w-lg break-all mb-6">
+            {errMsg}
+          </p>
+        )}
         <a
           href="/es/dashboard"
           className="px-6 py-3 rounded-[50px] bg-drawsports-primary text-white font-bold shadow-drawsports-glow hover:opacity-90"

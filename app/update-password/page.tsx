@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { createClient } from "@/supabase/client";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { PasswordInput } from "@/components/PasswordInput";
 
@@ -11,7 +10,6 @@ export default function UpdatePasswordPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -38,8 +36,8 @@ export default function UpdatePasswordPage() {
       return;
     }
 
-    router.push("/es/dashboard");
-    router.refresh();
+    // Navegación completa para asegurar que las cookies de sesión se envíen correctamente
+    window.location.href = "/es/dashboard";
   }
 
   return (
