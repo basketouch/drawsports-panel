@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createClient } from "@/supabase/client";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { translations, type Locale } from "@/lib/translations";
@@ -10,14 +10,22 @@ import { PasswordInput } from "@/components/PasswordInput";
 
 export default function LoginPage() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const locale = (params?.locale as Locale) || "es";
   const t = translations[locale];
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    if (searchParams.get("success") === "password_created") {
+      setSuccessMessage(t["login.passwordCreated"]);
+    }
+  }, [searchParams, t]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -33,8 +41,8 @@ export default function LoginPage() {
       return;
     }
 
-    router.push(`/${locale}/dashboard`);
-    router.refresh();
+    // Navegación completa para asegurar que las cookies de sesión se envíen
+    window.location.href = `/${locale}/dashboard`;
   }
 
   return (
@@ -56,6 +64,11 @@ export default function LoginPage() {
           <p className="text-drawsports-text-muted text-center text-sm mb-6">
             {t["login.subtitle"]}
           </p>
+          {successMessage && (
+            <p className="text-green-400 text-sm text-center mb-4 bg-green-500/10 py-3 px-4 rounded-xl">
+              {successMessage}
+            </p>
+          )}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label

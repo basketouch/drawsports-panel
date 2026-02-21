@@ -28,16 +28,30 @@ export default function UpdatePasswordPage() {
     setLoading(true);
 
     const supabase = createClient();
-    const { error } = await supabase.auth.updateUser({ password });
-
-    if (error) {
-      setError(error.message);
+    const { data: { user } } = await supabase.auth.getUser();
+    const email = user?.email;
+    if (!email) {
+      setError("Session expired. Please use the invitation link again.");
       setLoading(false);
       return;
     }
 
-    // Navegación completa para asegurar que las cookies de sesión se envíen correctamente
-    window.location.href = "/es/dashboard";
+    const { error: updateError } = await supabase.auth.updateUser({ password });
+    if (updateError) {
+      setError(updateError.message);
+      setLoading(false);
+      return;
+    }
+
+    // updateUser mata la sesión por seguridad. Re-autenticamos inmediatamente con las nuevas credenciales.
+    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+    if (!signInError) {
+      window.location.href = "/es/dashboard";
+      return;
+    }
+
+    // Si falla (ej. "Email not confirmed"), redirigir a login para que intente manualmente
+    window.location.href = "/es/login?success=password_created";
   }
 
   return (

@@ -18,6 +18,7 @@ export const translations = {
     "login.forgot": "¿Olvidaste tu contraseña?",
     "login.forgot.hint": "",
     "login.hasAccount": "¿Ya tienes cuenta?",
+    "login.passwordCreated": "Contraseña creada correctamente. Inicia sesión con tu email y contraseña.",
 
     // Signup
     "signup.title": "Crear cuenta",
@@ -129,6 +130,7 @@ export const translations = {
     "login.forgot": "Forgot your password?",
     "login.forgot.hint": "",
     "login.hasAccount": "Already have an account?",
+    "login.passwordCreated": "Password created successfully. Sign in with your email and password.",
 
     // Signup
     "signup.title": "Create account",
