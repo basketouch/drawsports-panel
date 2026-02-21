@@ -49,7 +49,7 @@ export default async function DashboardPage({
     .eq("id", user.id)
     .maybeSingle();
 
-  let org: { seats_limit: number; name: string; subscription_end?: string | null } | null = null;
+  let org: { seats_limit: number; name: string; subscription_start?: string | null; subscription_end?: string | null } | null = null;
   let orgMembers: { id: string; email: string; organization_role: string; consumes_seat?: boolean }[] = [];
   let orgInvites: { id: string; email: string }[] = [];
   let orgName: string | null = null;
@@ -60,15 +60,15 @@ export default async function DashboardPage({
   if (profile?.organization_id) {
     const { data: orgData } = await supabase
       .from("organizations")
-      .select("seats_limit, name, subscription_end")
+      .select("seats_limit, name, subscription_start, subscription_end")
       .eq("id", profile.organization_id)
       .single();
     orgName = orgData?.name ?? null;
 
     // Owner y member ven el equipo; solo owner carga invites y puede gestionar
     org = orgData
-      ? { seats_limit: orgData.seats_limit, name: orgData.name ?? "Mi equipo", subscription_end: orgData.subscription_end }
-      : { seats_limit: 3, name: "Mi equipo", subscription_end: null };
+      ? { seats_limit: orgData.seats_limit, name: orgData.name ?? "Mi equipo", subscription_start: orgData.subscription_start, subscription_end: orgData.subscription_end }
+      : { seats_limit: 3, name: "Mi equipo", subscription_start: null, subscription_end: null };
     const { data: membersData } = await supabase
       .from("profiles")
       .select("id, email, organization_role, consumes_seat")
@@ -106,10 +106,15 @@ export default async function DashboardPage({
 
   const today = new Date();
   const orgSubscriptionEnd = org?.subscription_end ? new Date(org.subscription_end) : null;
+  const orgSubscriptionStart = org?.subscription_start ? new Date(org.subscription_start) : null;
+  const effectiveStart = subscriptionStart || orgSubscriptionStart;
+  const effectiveEnd = subscriptionEnd || orgSubscriptionEnd;
+
+  // Tiene suscripción activa: is_pro O tiene org (pagó) y no está expirada
   const hasActiveSubscription =
     isPro ||
-    (profile?.organization_id && orgSubscriptionEnd && orgSubscriptionEnd > today);
-  const effectiveEnd = subscriptionEnd || orgSubscriptionEnd;
+    (!!profile?.organization_id && (!effectiveEnd || effectiveEnd > today));
+
   const daysLeft = effectiveEnd && hasActiveSubscription ? daysBetween(today, effectiveEnd) : 0;
   const isExpired = effectiveEnd ? today > effectiveEnd : false;
 
@@ -193,21 +198,21 @@ export default async function DashboardPage({
               {t["dashboard.dates"]}
             </h3>
             <div className="space-y-4">
-              {subscriptionStart && (
+              {effectiveStart && (
                 <div className="flex items-center gap-3">
                   <Calendar className="w-5 h-5 text-drawsports-primary flex-shrink-0" />
                   <div>
                     <p className="text-drawsports-text-muted text-xs">{t["dashboard.purchase"]}</p>
-                    <p className="text-white font-medium">{formatDate(subscriptionStart, locale)}</p>
+                    <p className="text-white font-medium">{formatDate(effectiveStart, locale)}</p>
                   </div>
                 </div>
               )}
-              {subscriptionEnd && (
+              {effectiveEnd && (
                 <div className="flex items-center gap-3">
                   <Calendar className="w-5 h-5 text-drawsports-primary flex-shrink-0" />
                   <div>
                     <p className="text-drawsports-text-muted text-xs">{t["dashboard.end"]}</p>
-                    <p className="text-white font-medium">{formatDate(subscriptionEnd, locale)}</p>
+                    <p className="text-white font-medium">{formatDate(effectiveEnd, locale)}</p>
                     <p className="text-drawsports-primary text-sm font-medium mt-1">
                       {isExpired
                         ? t["dashboard.expired"]
@@ -218,12 +223,12 @@ export default async function DashboardPage({
                   </div>
                 </div>
               )}
-              {hasActiveSubscription && !subscriptionStart && !subscriptionEnd && (
+              {hasActiveSubscription && !effectiveStart && !effectiveEnd && (
                 <p className="text-drawsports-primary text-sm font-medium">
                   {t["dashboard.licenseActive"]}
                 </p>
               )}
-              {!hasActiveSubscription && !subscriptionStart && !subscriptionEnd && (
+              {!hasActiveSubscription && !effectiveStart && !effectiveEnd && (
                 <p className="text-drawsports-text-muted text-sm">—</p>
               )}
             </div>
