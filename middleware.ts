@@ -37,6 +37,39 @@ export async function middleware(request: NextRequest) {
   if (pathname === "/dashboard") {
     return NextResponse.redirect(new URL("/es/dashboard", request.url));
   }
+  if (pathname === "/debug") {
+    return NextResponse.redirect(new URL("/es/debug", request.url));
+  }
+
+  // /es/debug, /en/debug, /api/debug: solo emails permitidos (DEBUG_ALLOWED_EMAILS)
+  const debugPaths = ["/es/debug", "/en/debug"];
+  const isDebugApi = pathname === "/api/debug";
+  if (debugPaths.includes(pathname) || isDebugApi) {
+    const allowed = (process.env.DEBUG_ALLOWED_EMAILS ?? "basketouch@gmail.com")
+      .split(",")
+      .map((e) => e.trim().toLowerCase())
+      .filter(Boolean);
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll();
+          },
+          setAll() {},
+        },
+      }
+    );
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user?.email || !allowed.includes(user.email.toLowerCase())) {
+      if (isDebugApi) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+      const locale = pathname.startsWith("/en") ? "en" : "es";
+      return NextResponse.redirect(new URL(`/${locale}/dashboard`, request.url));
+    }
+  }
 
   try {
     return await updateSession(request);
