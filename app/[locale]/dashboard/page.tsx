@@ -54,11 +54,29 @@ export default async function DashboardPage({
     redirect(`/${locale}/login`);
   }
 
-  const { data: profile, error: profileError } = await supabase
+  // Consulta con fallback: si organization_id/organization_role no existen (migraciones no aplicadas), usa columnas base
+  let profile: { email?: string; is_pro?: boolean; subscription_start?: string | null; subscription_end?: string | null; organization_id?: string | null; organization_role?: string | null } | null = null;
+  let profileError: { message?: string } | null = null;
+
+  const fullSelect = await supabase
     .from("profiles")
     .select("email, is_pro, subscription_start, subscription_end, organization_id, organization_role")
     .eq("id", user.id)
     .maybeSingle();
+
+  if (fullSelect.error) {
+    // Fallback: columnas org pueden no existir si migraciones no aplicadas
+    const baseSelect = await supabase
+      .from("profiles")
+      .select("email, is_pro, subscription_start, subscription_end")
+      .eq("id", user.id)
+      .maybeSingle();
+    profile = baseSelect.data;
+    profileError = baseSelect.error;
+  } else {
+    profile = fullSelect.data;
+    profileError = fullSelect.error;
+  }
 
   let org: { seats_limit: number; name: string; subscription_start?: string | null; subscription_end?: string | null } | null = null;
   let orgMembers: { id: string; email: string; organization_role: string; consumes_seat?: boolean }[] = [];
@@ -69,36 +87,47 @@ export default async function DashboardPage({
   const isMember = profile?.organization_role === "member";
 
   if (profile?.organization_id) {
-    const { data: orgData } = await supabase
-      .from("organizations")
-      .select("seats_limit, name, subscription_start, subscription_end")
-      .eq("id", profile.organization_id)
-      .maybeSingle();
-    orgName = orgData?.name ?? null;
+    try {
+      const { data: orgData } = await supabase
+        .from("organizations")
+        .select("seats_limit, name, subscription_start, subscription_end")
+        .eq("id", profile.organization_id)
+        .maybeSingle();
+      orgName = orgData?.name ?? null;
 
-    // Owner y member ven el equipo; solo owner carga invites y puede gestionar
-    org = orgData
-      ? { seats_limit: orgData.seats_limit, name: orgData.name ?? "Mi equipo", subscription_start: orgData.subscription_start, subscription_end: orgData.subscription_end }
-      : { seats_limit: 3, name: "Mi equipo", subscription_start: null, subscription_end: null };
-    const { data: membersData } = await supabase
-      .from("profiles")
-      .select("id, email, organization_role, consumes_seat")
-      .eq("organization_id", profile.organization_id);
-    orgMembers = (membersData ?? []).map((m) => ({
-      id: m.id,
-      email: m.email ?? "",
-      organization_role: m.organization_role ?? "member",
-      consumes_seat: m.consumes_seat ?? true,
-    }));
+      org = orgData
+        ? { seats_limit: orgData.seats_limit, name: orgData.name ?? "Mi equipo", subscription_start: orgData.subscription_start, subscription_end: orgData.subscription_end }
+        : { seats_limit: 3, name: "Mi equipo", subscription_start: null, subscription_end: null };
 
-    // Solo el owner ve invitados y puede gestionar (editar, remover)
-    if (isOwner) {
-      const { data: invitesData } = await supabase
-        .from("organization_invites")
-        .select("id, email")
-        .eq("organization_id", profile.organization_id)
-        .eq("status", "pending");
-      orgInvites = (invitesData ?? []).map((i) => ({ id: i.id, email: i.email ?? "" }));
+      let membersRes = await supabase
+        .from("profiles")
+        .select("id, email, organization_role, consumes_seat")
+        .eq("organization_id", profile.organization_id);
+      if (membersRes.error) {
+        membersRes = await supabase
+          .from("profiles")
+          .select("id, email, organization_role")
+          .eq("organization_id", profile.organization_id);
+      }
+      if (!membersRes.error) {
+        orgMembers = (membersRes.data ?? []).map((m) => ({
+          id: m.id,
+          email: m.email ?? "",
+          organization_role: m.organization_role ?? "member",
+          consumes_seat: (m as { consumes_seat?: boolean }).consumes_seat ?? true,
+        }));
+      }
+
+      if (isOwner) {
+        const { data: invitesData } = await supabase
+          .from("organization_invites")
+          .select("id, email")
+          .eq("organization_id", profile.organization_id)
+          .eq("status", "pending");
+        orgInvites = (invitesData ?? []).map((i) => ({ id: i.id, email: i.email ?? "" }));
+      }
+    } catch (orgErr) {
+      console.error("[Dashboard] org fetch error:", orgErr);
     }
   }
 
@@ -364,17 +393,35 @@ export default async function DashboardPage({
     </div>
   );
   } catch (err) {
+    // Next.js redirect() y notFound() lanzan errores que no debemos capturar
+    const digest = (err as Error & { digest?: string })?.digest;
+    if (digest?.startsWith?.("NEXT_REDIRECT") || digest?.startsWith?.("NEXT_NOT_FOUND")) {
+      throw err;
+    }
     const errMsg = err instanceof Error ? err.message : String(err);
     console.error("[Dashboard] Server Component error:", err);
+    // Mostrar error real si es de configuración (env vars, Supabase) o si DEBUG está activo
+    const isConfigError = /missing|supabase|NEXT_PUBLIC|env|variable|relation|does not exist/i.test(errMsg);
+    const showDetails = isConfigError || process.env.NODE_ENV === "development" || process.env.NEXT_PUBLIC_DEBUG_ERRORS === "1";
+    const hint = isConfigError && /missing|supabase|NEXT_PUBLIC/i.test(errMsg)
+      ? "Añade NEXT_PUBLIC_SUPABASE_URL y NEXT_PUBLIC_SUPABASE_ANON_KEY en Vercel → Settings → Environment Variables."
+      : isConfigError && /relation|does not exist/i.test(errMsg)
+        ? "Ejecuta las migraciones de supabase/migrations/ en Supabase (SQL Editor)."
+        : null;
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-[#1a0f0f] p-8">
         <h1 className="text-2xl font-bold text-white mb-4">Error al cargar el panel</h1>
         <p className="text-drawsports-text-muted text-center max-w-md mb-2">
           Ha ocurrido un error. Por favor, recarga la página o intenta más tarde.
         </p>
-        {(process.env.NODE_ENV === "development" || process.env.NEXT_PUBLIC_DEBUG_ERRORS === "1") && (
-          <p className="text-drawsports-primary/80 text-sm font-mono max-w-lg break-all mb-6">
+        {showDetails && (
+          <p className="text-drawsports-primary/80 text-sm font-mono max-w-lg break-all mb-4 whitespace-pre-wrap bg-black/30 px-4 py-3 rounded-xl">
             {errMsg}
+          </p>
+        )}
+        {hint && (
+          <p className="text-drawsports-primary/90 text-sm max-w-lg text-center mb-6">
+            {hint}
           </p>
         )}
         <a
