@@ -4,6 +4,7 @@ import { CheckCircle, XCircle, Calendar, Download, Mail, Zap, Users } from "luci
 import { LogoutButton } from "./LogoutButton";
 import { ManageTeam } from "./ManageTeam";
 import { SetupTeamName } from "./SetupTeamName";
+import { EditableTeamName } from "./EditableTeamName";
 import Link from "next/link";
 import Image from "next/image";
 import { translations, type Locale } from "@/lib/translations";
@@ -226,7 +227,13 @@ export default async function DashboardPage({
               {t["dashboard.team"]}
             </h3>
             {hasActiveSubscription && profile?.organization_id ? (
-              <p className="text-white font-medium flex-1">{orgName || "Mi equipo"}</p>
+              <EditableTeamName
+                orgId={profile.organization_id}
+                orgName={orgName || org?.name || "Mi equipo"}
+                canManage={isOwner}
+                locale={safeLocale}
+                t={t}
+              />
             ) : (
               <div className="flex-1">
                 <p className="text-drawsports-text-muted text-sm">{t["dashboard.team.noTeam"]}</p>
@@ -282,7 +289,6 @@ export default async function DashboardPage({
         {org && profile?.organization_id ? (
           <ManageTeam
             orgId={profile.organization_id}
-            orgName={org.name}
             seatsLimit={org.seats_limit}
             members={orgMembers}
             invites={orgInvites}
