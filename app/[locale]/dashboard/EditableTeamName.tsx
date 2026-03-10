@@ -57,7 +57,7 @@ export function EditableTeamName({
 
   if (isEditing && canManage) {
     return (
-      <form onSubmit={handleSave} className="flex flex-wrap gap-2 items-center flex-1">
+      <form onSubmit={handleSave} className="flex flex-wrap gap-2 items-start flex-1">
         <input
           type="text"
           value={editValue}
@@ -91,7 +91,7 @@ export function EditableTeamName({
   }
 
   return (
-    <div className="flex items-center gap-2 flex-1 flex-wrap">
+    <div className="flex items-start gap-2 flex-1 flex-wrap">
       <p className="text-2xl font-bold text-white">{name || "Mi equipo"}</p>
       {canManage && (
         <button
