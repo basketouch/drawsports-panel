@@ -96,7 +96,7 @@ export default function SignupPage() {
           </div>
         </div>
       )}
-      <a href={locale === "en" ? "https://drawsports.app/pro/en/" : "https://drawsports.app/pro/"} className="mb-8 block">
+      <a href={locale === "en" ? "https://drawsports-web.vercel.app/pro/en/" : "https://drawsports-web.vercel.app/pro/"} className="mb-8 block">
         <Image
           src="/imagenes/logo.png"
           alt="DrawSports"
@@ -204,7 +204,7 @@ export default function SignupPage() {
         </div>
         <p className="mt-6 text-center">
           <a
-            href={locale === "en" ? "https://drawsports.app/pro/en/" : "https://drawsports.app/pro/"}
+            href={locale === "en" ? "https://drawsports-web.vercel.app/pro/en/" : "https://drawsports-web.vercel.app/pro/"}
             className="text-drawsports-text-muted hover:text-white transition-colors text-sm"
           >
             ← {t.back}
