@@ -3,7 +3,7 @@ import { createClient } from "@/supabase/server";
 import { CheckCircle, XCircle, Calendar, Download, Mail, Zap, Users } from "lucide-react";
 import { LogoutButton } from "./LogoutButton";
 import { ManageTeam } from "./ManageTeam";
-import { SetupTeamName, needsTeamSetup } from "./SetupTeamName";
+import { SetupTeamName } from "./SetupTeamName";
 import Link from "next/link";
 import Image from "next/image";
 import { translations, type Locale } from "@/lib/translations";
@@ -177,7 +177,7 @@ export default async function DashboardPage({
 
       <main className="max-w-4xl mx-auto px-4 py-8">
         {/* Primera vez tras pago: pedir nombre del equipo */}
-        {hasActiveSubscription && isOwner && profile?.organization_id && needsTeamSetup(orgName) && (
+        {hasActiveSubscription && isOwner && profile?.organization_id && (orgName === "Mi equipo" || !orgName?.trim()) && (
           <SetupTeamName
             orgId={profile.organization_id}
             locale={safeLocale}
@@ -393,11 +393,10 @@ export default async function DashboardPage({
     </div>
   );
   } catch (err) {
-    // Next.js redirect() y notFound() lanzan errores que no debemos capturar
-    const digest = (err as Error & { digest?: string })?.digest;
-    if (digest?.startsWith?.("NEXT_REDIRECT") || digest?.startsWith?.("NEXT_NOT_FOUND")) {
-      throw err;
-    }
+    // Next.js redirect() y notFound() lanzan errores que no debemos capturar ni loguear
+    const digest = String((err as Error & { digest?: string })?.digest ?? "");
+    const isRedirect = digest.startsWith("NEXT_REDIRECT") || digest.startsWith("NEXT_NOT_FOUND");
+    if (isRedirect) throw err;
     const errMsg = err instanceof Error ? err.message : String(err);
     console.error("[Dashboard] Server Component error:", err);
     // Mostrar error real si es de configuración (env vars, Supabase) o si DEBUG está activo
