@@ -99,22 +99,26 @@ export default async function DashboardPage({
         ? { seats_limit: orgData.seats_limit, name: orgData.name ?? "Mi equipo", subscription_start: orgData.subscription_start, subscription_end: orgData.subscription_end }
         : { seats_limit: 3, name: "Mi equipo", subscription_start: null, subscription_end: null };
 
-      let membersRes = await supabase
+      let membersData: { id: string; email: string; organization_role: string; consumes_seat?: boolean }[] = [];
+      const membersResFull = await supabase
         .from("profiles")
         .select("id, email, organization_role, consumes_seat")
         .eq("organization_id", profile.organization_id);
-      if (membersRes.error) {
-        membersRes = await supabase
+      if (!membersResFull.error) {
+        membersData = membersResFull.data ?? [];
+      } else {
+        const fallback = await supabase
           .from("profiles")
           .select("id, email, organization_role")
           .eq("organization_id", profile.organization_id);
+        if (!fallback.error) membersData = fallback.data ?? [];
       }
-      if (!membersRes.error) {
-        orgMembers = (membersRes.data ?? []).map((m) => ({
+      if (membersData.length > 0) {
+        orgMembers = membersData.map((m) => ({
           id: m.id,
           email: m.email ?? "",
           organization_role: m.organization_role ?? "member",
-          consumes_seat: (m as { consumes_seat?: boolean }).consumes_seat ?? true,
+          consumes_seat: m.consumes_seat ?? true,
         }));
       }
 
