@@ -27,11 +27,11 @@ export function SetupTeamName({
     setError(null);
     const name = teamName.trim();
     if (!name || name.length < 2) {
-      setError(locale === "es" ? "El nombre debe tener al menos 2 caracteres" : "Name must be at least 2 characters");
+      setError(t["msg.nameMinLength"]);
       return;
     }
     if (name.length > 100) {
-      setError(locale === "es" ? "Máximo 100 caracteres" : "Maximum 100 characters");
+      setError(t["msg.nameMaxLength"]);
       return;
     }
 
@@ -41,7 +41,7 @@ export function SetupTeamName({
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 
     if (!session?.access_token || !supabaseUrl) {
-      setError(locale === "es" ? "Sesión expirada" : "Session expired");
+      setError(t["msg.sessionExpired"]);
       setLoading(false);
       return;
     }
@@ -60,11 +60,11 @@ export function SetupTeamName({
       if (res.ok && result?.success) {
         router.refresh();
       } else {
-        setError(result?.error || (locale === "es" ? "Error al guardar" : "Error saving"));
+        setError(result?.error || t["msg.errorSaving"]);
       }
     } catch {
       setLoading(false);
-      setError(locale === "es" ? "Error inesperado" : "Unexpected error");
+      setError(t["msg.unexpectedError"]);
     }
   }
 

@@ -61,7 +61,7 @@ export function ManageTeam({
       return;
     }
     setInvitesList((prev) => prev.filter((i) => i.id !== inviteId));
-    setMessage({ type: "success", text: locale === "es" ? "Invitación revocada" : "Invitation revoked" });
+    setMessage({ type: "success", text: t["msg.inviteRevoked"] });
     router.refresh();
   }
 
@@ -75,7 +75,7 @@ export function ManageTeam({
     const supabase = createClient();
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.access_token || !supabaseUrl) {
-      setMessage({ type: "error", text: "Sesión expirada." });
+      setMessage({ type: "error", text: t["msg.sessionExpired"] });
       setTogglingSeat(false);
       return;
     }
@@ -96,13 +96,7 @@ export function ManageTeam({
         );
         setMessage({
           type: "success",
-          text: newValue
-            ? locale === "es"
-              ? "Plaza ocupada"
-              : "Seat occupied"
-            : locale === "es"
-              ? "Plaza liberada"
-              : "Seat released",
+          text: newValue ? t["msg.seatOccupied"] : t["msg.seatReleased"],
         });
         router.refresh();
       } else {
@@ -110,7 +104,7 @@ export function ManageTeam({
       }
     } catch {
       setTogglingSeat(false);
-      setMessage({ type: "error", text: "Error inesperado" });
+      setMessage({ type: "error", text: t["msg.unexpectedError"] });
     }
   }
 
@@ -122,7 +116,7 @@ export function ManageTeam({
     const supabase = createClient();
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.access_token || !supabaseUrl) {
-      setMessage({ type: "error", text: "Sesión expirada." });
+      setMessage({ type: "error", text: t["msg.sessionExpired"] });
       setRemovingId(null);
       return;
     }
@@ -139,14 +133,14 @@ export function ManageTeam({
       setRemovingId(null);
       if (res.ok && result?.success) {
         setMembersList((prev) => prev.filter((m) => m.id !== memberId));
-        setMessage({ type: "success", text: locale === "es" ? "Miembro expulsado del equipo" : "Member removed from team" });
+        setMessage({ type: "success", text: t["msg.memberRemoved"] });
         router.refresh();
       } else {
         setMessage({ type: "error", text: result?.error || "Error" });
       }
     } catch {
       setRemovingId(null);
-      setMessage({ type: "error", text: "Error inesperado" });
+      setMessage({ type: "error", text: t["msg.unexpectedError"] });
     }
   }
 
@@ -172,7 +166,7 @@ export function ManageTeam({
 
     const result = data as { success: boolean; error?: string; invited?: boolean };
     if (result.success) {
-      const msg = result.invited ? t["dashboard.manageTeam.inviteSent"] : (locale === "es" ? "Miembro añadido correctamente" : "Member added successfully");
+      const msg = result.invited ? t["dashboard.manageTeam.inviteSent"] : t["msg.memberAdded"];
       setMessage({ type: "success", text: msg });
       window.location.reload();
     } else {
@@ -238,7 +232,7 @@ export function ManageTeam({
                   onClick={handleToggleOwnerSeat}
                   disabled={togglingSeat}
                   className="p-1.5 rounded text-red-500 hover:bg-red-500/20 hover:text-red-400 transition-colors disabled:opacity-50 shrink-0"
-                  aria-label={locale === "es" ? "Liberar mi plaza" : "Release my seat"}
+                  aria-label={t["msg.releaseSeatAria"]}
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -248,7 +242,7 @@ export function ManageTeam({
                   onClick={handleToggleOwnerSeat}
                   disabled={togglingSeat}
                   className="p-1.5 rounded text-drawsports-primary hover:bg-drawsports-primary/20 transition-colors disabled:opacity-50 shrink-0"
-                  aria-label={locale === "es" ? "Ocupar plaza" : "Occupy seat"}
+                  aria-label={t["msg.occupySeatAria"]}
                 >
                   <Plus className="w-4 h-4" />
                 </button>
@@ -260,7 +254,7 @@ export function ManageTeam({
                 onClick={() => handleRemoveMember(m.id)}
                 disabled={removingId === m.id}
                 className="p-1.5 rounded text-red-500 hover:bg-red-500/20 hover:text-red-400 transition-colors disabled:opacity-50 shrink-0"
-                aria-label={locale === "es" ? "Expulsar del equipo" : "Remove from team"}
+                aria-label={t["msg.removeFromTeamAria"]}
               >
                 <X className="w-4 h-4" />
               </button>
@@ -271,14 +265,14 @@ export function ManageTeam({
           <div key={inv.id} className="flex items-center justify-between gap-2 py-2 border-b border-white/5 last:border-0">
             <span className="text-drawsports-text-muted flex-1">{inv.email}</span>
             <span className="text-drawsports-text-muted text-xs shrink-0">
-              {locale === "es" ? "Pendiente" : "Pending"}
+              {t["msg.pending"]}
             </span>
             <button
               type="button"
               onClick={() => handleRevokeInvite(inv.id)}
               disabled={revokingId === inv.id}
               className="p-1.5 rounded text-red-500 hover:bg-red-500/20 hover:text-red-400 transition-colors disabled:opacity-50 shrink-0"
-              aria-label={locale === "es" ? "Revocar invitación" : "Revoke invitation"}
+              aria-label={t["msg.revokeInvitationAria"]}
             >
               <X className="w-4 h-4" />
             </button>

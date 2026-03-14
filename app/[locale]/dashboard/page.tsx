@@ -12,7 +12,7 @@ import { LEMON_SQUEEZY_VARIANTS, getCheckoutUrl } from "@/lib/lemonsqueezy";
 
 function formatDate(date: Date, locale: string): string {
   if (typeof date?.getTime !== "function" || Number.isNaN(date.getTime())) return "—";
-  return date.toLocaleDateString(locale === "es" ? "es-ES" : "en-GB", {
+  return date.toLocaleDateString(locale === "es" ? "es-ES" : locale === "zh" ? "zh-CN" : "en-GB", {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -42,7 +42,7 @@ export default async function DashboardPage({
 }) {
   try {
     const { locale } = await params;
-    const safeLocale = (locale === "en" ? "en" : "es") as Locale;
+    const safeLocale = (locale === "en" ? "en" : locale === "zh" ? "zh" : "es") as Locale;
     const t = translations[safeLocale] ?? translations.es;
 
     const supabase = await createClient();

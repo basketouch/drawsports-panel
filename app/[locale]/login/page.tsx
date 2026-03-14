@@ -47,7 +47,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#1a0f0f] px-4">
-      <a href={locale === "en" ? "https://drawsports.app/pro/en/" : "https://drawsports.app/pro/"} className="mb-8 block">
+      <a href={locale === "zh" ? "https://drawsports.app/zh/pro/" : locale === "en" ? "https://drawsports.app/pro/en/" : "https://drawsports.app/pro/"} className="mb-8 block">
         <Image
           src="/imagenes/logo.png"
           alt="DrawSports"
@@ -99,8 +99,8 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                ariaLabelShow={locale === "es" ? "Mostrar contraseña" : "Show password"}
-                ariaLabelHide={locale === "es" ? "Ocultar contraseña" : "Hide password"}
+                ariaLabelShow={t["msg.showPassword"]}
+                ariaLabelHide={t["msg.hidePassword"]}
               />
             </div>
             {error && (
@@ -124,7 +124,7 @@ export default function LoginPage() {
         </div>
         <p className="mt-6 text-center">
           <a
-            href={locale === "en" ? "https://drawsports.app/pro/en/" : "https://drawsports.app/pro/"}
+            href={locale === "zh" ? "https://drawsports.app/zh/pro/" : locale === "en" ? "https://drawsports.app/pro/en/" : "https://drawsports.app/pro/"}
             className="text-drawsports-text-muted hover:text-white transition-colors text-sm"
           >
             ← {t.back}

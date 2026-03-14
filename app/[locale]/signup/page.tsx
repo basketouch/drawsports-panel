@@ -28,12 +28,12 @@ export default function SignupPage() {
     setError(null);
 
     if (password !== passwordConfirm) {
-      setError(locale === "es" ? "Las contraseñas no coinciden" : "Passwords do not match");
+      setError(t["msg.passwordsMismatch"]);
       return;
     }
 
     if (password.length < 6) {
-      setError(locale === "es" ? "La contraseña debe tener al menos 6 caracteres" : "Password must be at least 6 characters");
+      setError(t["msg.passwordMinLength"]);
       return;
     }
 
@@ -96,7 +96,7 @@ export default function SignupPage() {
           </div>
         </div>
       )}
-      <a href={locale === "en" ? "https://drawsports.app/pro/en/" : "https://drawsports.app/pro/"} className="mb-8 block">
+      <a href={locale === "zh" ? "https://drawsports.app/zh/pro/" : locale === "en" ? "https://drawsports.app/pro/en/" : "https://drawsports.app/pro/"} className="mb-8 block">
         <Image
           src="/imagenes/logo.png"
           alt="DrawSports"
@@ -144,8 +144,8 @@ export default function SignupPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength={6}
-                ariaLabelShow={locale === "es" ? "Mostrar contraseña" : "Show password"}
-                ariaLabelHide={locale === "es" ? "Ocultar contraseña" : "Hide password"}
+                ariaLabelShow={t["msg.showPassword"]}
+                ariaLabelHide={t["msg.hidePassword"]}
               />
             </div>
             <div>
@@ -161,8 +161,8 @@ export default function SignupPage() {
                 onChange={(e) => setPasswordConfirm(e.target.value)}
                 required
                 minLength={6}
-                ariaLabelShow={locale === "es" ? "Mostrar contraseña" : "Show password"}
-                ariaLabelHide={locale === "es" ? "Ocultar contraseña" : "Hide password"}
+                ariaLabelShow={t["msg.showPassword"]}
+                ariaLabelHide={t["msg.hidePassword"]}
               />
             </div>
             <div>
@@ -204,7 +204,7 @@ export default function SignupPage() {
         </div>
         <p className="mt-6 text-center">
           <a
-            href={locale === "en" ? "https://drawsports.app/pro/en/" : "https://drawsports.app/pro/"}
+            href={locale === "zh" ? "https://drawsports.app/zh/pro/" : locale === "en" ? "https://drawsports.app/pro/en/" : "https://drawsports.app/pro/"}
             className="text-drawsports-text-muted hover:text-white transition-colors text-sm"
           >
             ← {t.back}
