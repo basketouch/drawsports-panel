@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { type Locale } from "@/lib/translations";
 import { LanguageSelector } from "@/components/LanguageSelector";
 
-const locales: Locale[] = ["es", "en", "zh"];
+const locales: Locale[] = ["es", "en", "zh", "ja"];
 
 // Evitar pre-render estático que puede causar sesión vacía en dashboard
 export const dynamic = "force-dynamic";

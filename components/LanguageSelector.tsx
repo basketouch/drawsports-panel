@@ -5,12 +5,13 @@ import { usePathname } from "next/navigation";
 
 export function LanguageSelector() {
   const pathname = usePathname();
-  const pathWithoutLocale = pathname?.replace(/^\/(es|en|zh)/, "") || "";
-  const currentLocale = pathname?.startsWith("/en") ? "en" : pathname?.startsWith("/zh") ? "zh" : "es";
+  const pathWithoutLocale = pathname?.replace(/^\/(es|en|zh|ja)/, "") || "";
+  const currentLocale = pathname?.startsWith("/en") ? "en" : pathname?.startsWith("/zh") ? "zh" : pathname?.startsWith("/ja") ? "ja" : "es";
 
   const esHref = pathWithoutLocale ? `/es${pathWithoutLocale}` : "/es/login";
   const enHref = pathWithoutLocale ? `/en${pathWithoutLocale}` : "/en/login";
   const zhHref = pathWithoutLocale ? `/zh${pathWithoutLocale}` : "/zh/login";
+  const jaHref = pathWithoutLocale ? `/ja${pathWithoutLocale}` : "/ja/login";
 
   return (
     <div className="fixed top-2.5 right-2.5 sm:top-5 sm:right-5 z-[1000] flex gap-2.5">
@@ -46,6 +47,17 @@ export function LanguageSelector() {
           }`}
       >
         🇨🇳
+      </Link>
+      <Link
+        href={jaHref}
+        title="日本語"
+        className={`inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full text-[1.3rem] sm:text-[1.5rem] transition-all duration-300 no-underline
+          ${currentLocale === "ja"
+            ? "bg-drawsports-primary/20 border-2 border-drawsports-primary"
+            : "bg-drawsports-bg-card border-2 border-white/20 shadow-[0_4px_10px_rgba(0,0,0,0.3)] hover:-translate-y-0.5 hover:border-drawsports-primary hover:shadow-[0_6px_15px_rgba(255,23,68,0.4)]"
+          }`}
+      >
+        🇯🇵
       </Link>
     </div>
   );

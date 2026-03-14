@@ -10,6 +10,7 @@ export function LogoutButton({ locale }: { locale: Locale }) {
     es: "Cerrar sesión",
     en: "Sign out",
     zh: "退出登录",
+    ja: "ログアウト",
   }[locale];
 
   async function handleLogout() {
