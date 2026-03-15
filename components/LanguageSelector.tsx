@@ -5,10 +5,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const FLAGS = [
-  { locale: "es", flag: "🇪🇸", label: "Español", title: "Español" },
-  { locale: "en", flag: "🇺🇸", label: "English", title: "English" },
-  { locale: "zh", flag: "🇨🇳", label: "中文", title: "中文" },
-  { locale: "ja", flag: "🇯🇵", label: "日本語", title: "日本語" },
+  { locale: "es", flag: "🇪🇸", title: "Español" },
+  { locale: "en", flag: "🇺🇸", title: "English" },
+  { locale: "zh", flag: "🇨🇳", title: "中文" },
+  { locale: "ja", flag: "🇯🇵", title: "日本語" },
 ] as const;
 
 const btnClass =
@@ -84,19 +84,19 @@ export function LanguageSelector() {
         </button>
         {dropdownOpen && (
           <div
-            className="absolute top-full right-0 mt-2 py-2 px-2 min-w-[120px] bg-drawsports-bg-card border-2 border-white/20 rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.4)] flex flex-col gap-1 z-[1001]"
+            className="absolute top-full right-0 mt-2 py-2 px-2 bg-drawsports-bg-card border-2 border-white/20 rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.4)] flex flex-col gap-1 z-[1001]"
             role="menu"
           >
-            {FLAGS.map(({ locale, flag, label, title }) => (
+            {FLAGS.map(({ locale, flag, title }) => (
               <Link
                 key={locale}
                 href={getHref(locale)}
                 title={title}
                 role="menuitem"
-                className="flex items-center gap-2 py-2.5 px-3 rounded-lg text-white no-underline text-base hover:bg-drawsports-primary/20 transition-colors"
+                className="flex items-center justify-center w-10 h-10 rounded-lg text-[1.3rem] no-underline hover:bg-drawsports-primary/20 transition-colors"
                 onClick={() => setDropdownOpen(false)}
               >
-                {flag} {label}
+                {flag}
               </Link>
             ))}
           </div>
