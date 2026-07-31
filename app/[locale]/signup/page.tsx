@@ -7,6 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { translations, type Locale } from "@/lib/translations";
 import { PasswordInput } from "@/components/PasswordInput";
+import { getDrawSportsProHomeHref } from "@/lib/drawsports-links";
 
 export default function SignupPage() {
   const params = useParams();
@@ -22,14 +23,7 @@ export default function SignupPage() {
   const [success, setSuccess] = useState(false);
   const [hasSession, setHasSession] = useState(false);
 
-  const proHomeHref =
-    locale === "zh"
-      ? "https://drawsports.app/zh/pro/"
-      : locale === "ja"
-        ? "https://drawsports.app/ja/pro/"
-        : locale === "en"
-          ? "https://drawsports.app/pro/en/"
-          : "https://drawsports.app/pro/";
+  const proHomeHref = getDrawSportsProHomeHref(locale);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

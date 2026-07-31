@@ -9,9 +9,7 @@ export function LogoutButton({ locale }: { locale: Locale }) {
   const t = {
     es: "Cerrar sesión",
     en: "Sign out",
-    zh: "退出登录",
-    ja: "ログアウト",
-  }[locale];
+  }[locale === "en" ? "en" : "es"];
 
   async function handleLogout() {
     const supabase = createClient();

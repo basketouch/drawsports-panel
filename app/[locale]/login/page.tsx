@@ -7,6 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { translations, type Locale } from "@/lib/translations";
 import { PasswordInput } from "@/components/PasswordInput";
+import { getDrawSportsProHomeHref } from "@/lib/drawsports-links";
 
 export default function LoginPage() {
   const params = useParams();
@@ -44,14 +45,7 @@ export default function LoginPage() {
     window.location.href = `/${locale}/dashboard`;
   }
 
-  const proHomeHref =
-    locale === "zh"
-      ? "https://drawsports.app/zh/pro/"
-      : locale === "ja"
-        ? "https://drawsports.app/ja/pro/"
-        : locale === "en"
-          ? "https://drawsports.app/pro/en/"
-          : "https://drawsports.app/pro/";
+  const proHomeHref = getDrawSportsProHomeHref(locale);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-drawsports-bg-dark px-4">

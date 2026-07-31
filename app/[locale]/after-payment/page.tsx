@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { translations, type Locale } from "@/lib/translations";
+import { getDrawSportsProHomeHref } from "@/lib/drawsports-links";
 import { CheckCircle, Mail } from "lucide-react";
 
 export default function AfterPaymentPage() {
@@ -11,9 +12,11 @@ export default function AfterPaymentPage() {
   const locale = (params?.locale as Locale) || "es";
   const t = translations[locale];
 
+  const proHomeHref = getDrawSportsProHomeHref(locale);
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#1a0f0f] px-4">
-      <a href={locale === "zh" ? "https://drawsports.app/zh/pro/" : locale === "ja" ? "https://drawsports.app/ja/pro/" : locale === "en" ? "https://drawsports.app/pro/en/" : "https://drawsports.app/pro/"} className="mb-8 block text-center">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-drawsports-bg-dark px-4">
+      <a href={proHomeHref} className="mb-8 block text-center">
         <Image
           src="/imagenes/logo.png"
           alt="DrawSports"
@@ -57,7 +60,7 @@ export default function AfterPaymentPage() {
         </div>
         <p className="mt-6 text-center">
           <a
-            href={locale === "zh" ? "https://drawsports.app/zh/pro/" : locale === "ja" ? "https://drawsports.app/ja/pro/" : locale === "en" ? "https://drawsports.app/pro/en/" : "https://drawsports.app/pro/"}
+            href={proHomeHref}
             className="text-drawsports-text-muted hover:text-white transition-colors text-sm"
           >
             ← {t.back}
