@@ -1,18 +1,23 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --primary: #FF1744;
-  --bg-dark: #1a0f0f;
-  --bg-card: #2a1f1f;
-  --text-main: #ffffff;
-  --text-muted: #a0a0a0;
+  --primary: #b81e24;
+  --primary-hover: #d42830;
+  --bg-dark: #0c0d10;
+  --bg-card: #14161c;
+  --bg-elevated: #1a1d26;
+  --text-main: #f4f4f5;
+  --text-muted: #a1a1aa;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background-color: var(--bg-dark);
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: radial-gradient(1200px 600px at 50% -10%, rgba(184, 30, 36, 0.18), transparent 60%),
+    var(--bg-dark);
   color: var(--text-main);
   line-height: 1.6;
   @apply antialiased;

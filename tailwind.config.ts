@@ -10,16 +10,20 @@ const config: Config = {
     extend: {
       colors: {
         drawsports: {
-          primary: "#FF1744",
-          "primary-hover": "#ff4569",
-          "bg-dark": "#1a0f0f",
-          "bg-card": "#2a1f1f",
-          "text-muted": "#a0a0a0",
+          primary: "#b81e24",
+          "primary-hover": "#d42830",
+          "bg-dark": "#0c0d10",
+          "bg-card": "#14161c",
+          "bg-elevated": "#1a1d26",
+          "text-muted": "#a1a1aa",
         },
       },
       boxShadow: {
-        "drawsports-glow": "0 4px 15px rgba(255, 23, 68, 0.4)",
-        "drawsports-card": "0 8px 30px rgba(0, 0, 0, 0.3)",
+        "drawsports-glow": "0 4px 15px rgba(184, 30, 36, 0.25)",
+        "drawsports-card": "0 8px 30px rgba(0, 0, 0, 0.35)",
+      },
+      borderRadius: {
+        btn: "10px",
       },
     },
   },

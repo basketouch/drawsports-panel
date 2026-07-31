@@ -41,13 +41,21 @@ export default function LoginPage() {
       return;
     }
 
-    // Navegación completa para asegurar que las cookies de sesión se envíen
     window.location.href = `/${locale}/dashboard`;
   }
 
+  const proHomeHref =
+    locale === "zh"
+      ? "https://drawsports.app/zh/pro/"
+      : locale === "ja"
+        ? "https://drawsports.app/ja/pro/"
+        : locale === "en"
+          ? "https://drawsports.app/pro/en/"
+          : "https://drawsports.app/pro/";
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#1a0f0f] px-4">
-      <a href={locale === "zh" ? "https://drawsports.app/zh/pro/" : locale === "ja" ? "https://drawsports.app/ja/pro/" : locale === "en" ? "https://drawsports.app/pro/en/" : "https://drawsports.app/pro/"} className="mb-8 block">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-drawsports-bg-dark px-4">
+      <a href={proHomeHref} className="mb-8 block">
         <Image
           src="/imagenes/logo.png"
           alt="DrawSports"
@@ -83,7 +91,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-3 rounded-xl bg-[#1a0f0f] border border-white/10 text-white placeholder-white/40 focus:ring-2 focus:ring-drawsports-primary focus:border-drawsports-primary transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-drawsports-bg-dark border border-white/10 text-white placeholder-white/40 focus:ring-2 focus:ring-drawsports-primary focus:border-drawsports-primary transition-all"
                 placeholder="tu@email.com"
               />
             </div>
@@ -104,14 +112,12 @@ export default function LoginPage() {
               />
             </div>
             {error && (
-              <p className="text-drawsports-primary text-sm font-medium">
-                {error}
-              </p>
+              <p className="text-drawsports-primary text-sm font-medium">{error}</p>
             )}
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 rounded-[50px] bg-drawsports-primary text-white font-bold shadow-drawsports-glow hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(255,23,68,0.5)] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none transition-all duration-200"
+              className="w-full py-4 rounded-btn bg-drawsports-primary text-white font-bold shadow-drawsports-glow hover:shadow-drawsports-glow disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none transition-all duration-200"
             >
               {loading ? t["login.submitting"] : t["login.submit"]}
             </button>
@@ -124,7 +130,7 @@ export default function LoginPage() {
         </div>
         <p className="mt-6 text-center">
           <a
-            href={locale === "zh" ? "https://drawsports.app/zh/pro/" : locale === "ja" ? "https://drawsports.app/ja/pro/" : locale === "en" ? "https://drawsports.app/pro/en/" : "https://drawsports.app/pro/"}
+            href={proHomeHref}
             className="text-drawsports-text-muted hover:text-white transition-colors text-sm"
           >
             ← {t.back}

@@ -1,0 +1,154 @@
+<!--
+  PLANTILLAS DE EMAIL PARA SUPABASE
+  ================================
+  Supabase Dashboard → Authentication → Email Templates
+
+  1. CONFIRM SIGNUP: pega el HTML de "Confirm signup" abajo
+  2. INVITE USER: pega el HTML de "Invite user" abajo
+-->
+
+<!-- ========== CONFIRM SIGNUP ========== -->
+<!-- Subject: Confirm your account - DrawSports PRO -->
+<!--
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width: 480px; margin: 0 auto; background-color: #0c0d10; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.2); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+  <tr><td style="padding: 32px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08);">
+    <img src="https://drawsports.app/logo.png" alt="DrawSports" width="80" height="80" style="display: block; margin: 0 auto 16px; border-radius: 16px;" />
+    <h1 style="margin: 0; font-size: 24px; font-weight: 700; color: #ffffff;">DrawSports PRO</h1>
+  </td></tr>
+  <tr><td style="padding: 32px;">
+    <h2 style="margin: 0 0 16px; font-size: 20px; font-weight: 600; color: #ffffff;">Confirm your registration</h2>
+    <p style="margin: 0 0 24px; font-size: 15px; color: #c0c0c0;">Click to activate your account and access the panel.</p>
+    <p style="text-align: center;"><a href="{{ .ConfirmationURL }}" style="display: inline-block; padding: 14px 32px; background: #b81e24; color: #ffffff !important; font-size: 16px; font-weight: 700; text-decoration: none; border-radius: 10px;">Confirm my account</a></p>
+    <p style="margin: 24px 0 0; font-size: 13px; color: #808080;">If the button doesn't work, <a href="{{ .ConfirmationURL }}" style="color: #b81e24;">click here</a>.</p>
+  </td></tr>
+  <tr><td style="padding: 24px; background-color: #0d0808; text-align: center;"><p style="margin: 0; font-size: 12px; color: #606060;">© 2026 DrawSports</p></td></tr>
+</table>
+-->
+
+<!-- ========== VERSIÓN COMPLETA (Confirm signup) - Copiar desde aquí ========== -->
+<div style="background-color: #f4f4f5; padding: 40px 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width: 480px; margin: 0 auto; background-color: #0c0d10; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.2);">
+  <tr>
+    <td style="padding: 32px 32px 24px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08);">
+      <img src="https://drawsports.app/logo.png" alt="DrawSports" width="80" height="80" style="display: block; margin: 0 auto 16px; border-radius: 16px;" />
+      <h1 style="margin: 0; font-size: 24px; font-weight: 700; color: #ffffff; letter-spacing: 0.05em;">DrawSports PRO</h1>
+      <p style="margin: 8px 0 0; font-size: 14px; color: #a0a0a0;">License panel</p>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding: 32px;">
+      <h2 style="margin: 0 0 16px; font-size: 20px; font-weight: 600; color: #ffffff;">Confirm your registration</h2>
+      <p style="margin: 0 0 24px; font-size: 15px; color: #c0c0c0; line-height: 1.6;">
+        Click the button to activate your account and access the DrawSports PRO license panel.
+      </p>
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+          <td align="center">
+            <a href="{{ .ConfirmationURL }}" style="display: inline-block; padding: 14px 32px; background: #b81e24; color: #ffffff !important; font-size: 16px; font-weight: 700; text-decoration: none; border-radius: 10px; box-shadow: 0 4px 16px rgba(184, 30, 36, 0.4);">
+              Confirm my account
+            </a>
+          </td>
+        </tr>
+      </table>
+      <p style="margin: 24px 0 0; font-size: 13px; color: #808080;">
+        If the button doesn't work, <a href="{{ .ConfirmationURL }}" style="color: #b81e24;">click here</a> to open the link.
+      </p>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding: 24px 32px; background-color: #0d0808; border-top: 1px solid rgba(255,255,255,0.05);">
+      <p style="margin: 0; font-size: 12px; color: #606060; text-align: center;">
+        © 2026 DrawSports · Basketouch Solutions Spain SL
+      </p>
+    </td>
+  </tr>
+</table>
+</div>
+
+<!-- ========== RECOVER PASSWORD (Reset password) ========== -->
+<!-- Subject: Recover your password - DrawSports PRO -->
+<div style="background-color: #f4f4f5; padding: 40px 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width: 480px; margin: 0 auto; background-color: #0c0d10; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.2);">
+  <tr>
+    <td style="padding: 32px 32px 24px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08);">
+      <img src="https://drawsports.app/logo.png" alt="DrawSports" width="80" height="80" style="display: block; margin: 0 auto 16px; border-radius: 16px;" />
+      <h1 style="margin: 0; font-size: 24px; font-weight: 700; color: #ffffff; letter-spacing: 0.05em;">DrawSports PRO</h1>
+      <p style="margin: 8px 0 0; font-size: 14px; color: #a0a0a0;">License panel</p>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding: 32px;">
+      <h2 style="margin: 0 0 16px; font-size: 20px; font-weight: 600; color: #ffffff;">Recover your password</h2>
+      <p style="margin: 0 0 24px; font-size: 15px; color: #c0c0c0; line-height: 1.6;">
+        You requested to recover your DrawSports PRO password. Click the button below to create a new password.
+      </p>
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+          <td align="center">
+            <a href="{{ .ConfirmationURL }}" style="display: inline-block; padding: 14px 32px; background: #b81e24; color: #ffffff !important; font-size: 16px; font-weight: 700; text-decoration: none; border-radius: 10px; box-shadow: 0 4px 16px rgba(184, 30, 36, 0.4);">
+              Create new password
+            </a>
+          </td>
+        </tr>
+      </table>
+      <p style="margin: 24px 0 0; font-size: 13px; color: #808080;">
+        This link expires in 24 hours.
+      </p>
+      <p style="margin: 8px 0 0; font-size: 13px; color: #808080;">
+        If you didn't request this, you can ignore this email.
+      </p>
+      <p style="margin: 24px 0 0; font-size: 13px; color: #808080;">
+        If the button doesn't work, <a href="{{ .ConfirmationURL }}" style="color: #b81e24;">click here</a> to open the link.
+      </p>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding: 24px 32px; background-color: #0d0808; border-top: 1px solid rgba(255,255,255,0.05);">
+      <p style="margin: 0; font-size: 12px; color: #606060; text-align: center;">
+        © 2026 DrawSports · Basketouch Solutions Spain SL
+      </p>
+    </td>
+  </tr>
+</table>
+</div>
+
+<!-- ========== INVITE USER (para invitaciones de equipo) ========== -->
+<!-- Subject: You've been invited to DrawSports PRO -->
+<div style="background-color: #f4f4f5; padding: 40px 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width: 480px; margin: 0 auto; background-color: #0c0d10; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.2);">
+  <tr>
+    <td style="padding: 32px 32px 24px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08);">
+      <img src="https://drawsports.app/logo.png" alt="DrawSports" width="80" height="80" style="display: block; margin: 0 auto 16px; border-radius: 16px;" />
+      <h1 style="margin: 0; font-size: 24px; font-weight: 700; color: #ffffff; letter-spacing: 0.05em;">DrawSports PRO</h1>
+      <p style="margin: 8px 0 0; font-size: 14px; color: #a0a0a0;">License panel</p>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding: 32px;">
+      <h2 style="margin: 0 0 16px; font-size: 20px; font-weight: 600; color: #ffffff;">Team invitation</h2>
+      <p style="margin: 0 0 24px; font-size: 15px; color: #c0c0c0; line-height: 1.6;">
+        You've been invited to join the DrawSports PRO team. Click the button to create your password and access the panel.
+      </p>
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+          <td align="center">
+            <a href="{{ .ConfirmationURL }}" style="display: inline-block; padding: 14px 32px; background: #b81e24; color: #ffffff !important; font-size: 16px; font-weight: 700; text-decoration: none; border-radius: 10px; box-shadow: 0 4px 16px rgba(184, 30, 36, 0.4);">
+              Accept invitation
+            </a>
+          </td>
+        </tr>
+      </table>
+      <p style="margin: 24px 0 0; font-size: 13px; color: #808080;">
+        If the button doesn't work, <a href="{{ .ConfirmationURL }}" style="color: #b81e24;">click here</a> to open the link.
+      </p>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding: 24px 32px; background-color: #0d0808; border-top: 1px solid rgba(255,255,255,0.05);">
+      <p style="margin: 0; font-size: 12px; color: #606060; text-align: center;">
+        © 2026 DrawSports · Basketouch Solutions Spain SL
+      </p>
+    </td>
+  </tr>
+</table>
+</div>

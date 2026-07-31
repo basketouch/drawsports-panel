@@ -163,7 +163,7 @@ export default async function DashboardPage({
   const isExpired = effectiveEnd ? today > effectiveEnd : false;
 
   return (
-    <div className="min-h-screen bg-[#1a0f0f]">
+    <div className="min-h-screen bg-drawsports-bg-dark">
       <header className="bg-drawsports-bg-card border-b border-white/5">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link href={`/${locale}/dashboard`} className="flex items-center gap-3">
@@ -368,14 +368,14 @@ export default async function DashboardPage({
             href="https://apps.apple.com/es/app/drawsports/id6756434573"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-[50px] bg-drawsports-primary text-white font-bold shadow-drawsports-glow hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(255,23,68,0.5)] transition-all duration-200"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-btn bg-drawsports-primary text-white font-bold shadow-drawsports-glow hover:shadow-drawsports-glow transition-all duration-200"
           >
             <Download className="w-5 h-5" />
             {t["dashboard.download"]}
           </a>
           <a
             href="mailto:info@basketouch.com"
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-[50px] border border-white/20 text-drawsports-text-muted font-medium hover:border-drawsports-primary hover:text-white transition-all duration-200"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-btn border border-white/20 text-drawsports-text-muted font-medium hover:border-drawsports-primary hover:text-white transition-all duration-200"
           >
             <Mail className="w-5 h-5" />
             {t["dashboard.support"]}

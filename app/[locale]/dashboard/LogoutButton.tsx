@@ -23,7 +23,7 @@ export function LogoutButton({ locale }: { locale: Locale }) {
   return (
     <button
       onClick={handleLogout}
-      className="inline-flex items-center gap-2 px-4 py-2 rounded-[50px] border border-white/20 text-drawsports-text-muted font-medium hover:border-drawsports-primary hover:text-white hover:shadow-drawsports-glow hover:-translate-y-0.5 transition-all duration-200"
+      className="inline-flex items-center gap-2 px-4 py-2 rounded-btn border border-white/20 text-drawsports-text-muted font-medium hover:border-drawsports-primary hover:text-white hover:shadow-drawsports-glow transition-all duration-200"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

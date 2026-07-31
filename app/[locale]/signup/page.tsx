@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/supabase/client";
-import { useRouter, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { translations, type Locale } from "@/lib/translations";
@@ -21,7 +21,15 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [hasSession, setHasSession] = useState(false);
-  const router = useRouter();
+
+  const proHomeHref =
+    locale === "zh"
+      ? "https://drawsports.app/zh/pro/"
+      : locale === "ja"
+        ? "https://drawsports.app/ja/pro/"
+        : locale === "en"
+          ? "https://drawsports.app/pro/en/"
+          : "https://drawsports.app/pro/";
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -61,13 +69,27 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#1a0f0f] px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-drawsports-bg-dark px-4">
       {success && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" role="dialog" aria-modal="true">
+        <div
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+        >
           <div className="bg-drawsports-bg-card rounded-2xl p-8 border border-white/10 shadow-drawsports-card max-w-md w-full text-center">
             <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-green-500/20 flex items-center justify-center">
-              <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              <svg
+                className="w-6 h-6 text-green-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                />
               </svg>
             </div>
             <h2 className="text-xl font-bold text-white mb-2">{t["signup.checkEmail"]}</h2>
@@ -77,18 +99,24 @@ export default function SignupPage() {
             <p className="text-drawsports-text-muted text-xs mb-6">{t["signup.checkSpam"]}</p>
             <div className="flex gap-2 justify-center flex-wrap">
               {hasSession ? (
-                <Link href={`/${locale}/dashboard`} className="px-6 py-2 rounded-[50px] bg-drawsports-primary text-white text-sm font-medium hover:shadow-drawsports-glow">
+                <Link
+                  href={`/${locale}/dashboard`}
+                  className="px-6 py-2 rounded-btn bg-drawsports-primary text-white text-sm font-medium hover:shadow-drawsports-glow"
+                >
                   {t["signup.goPanel"]}
                 </Link>
               ) : (
-                <Link href={`/${locale}/login`} className="px-6 py-2 rounded-[50px] bg-white/10 text-white text-sm font-medium hover:bg-white/20">
+                <Link
+                  href={`/${locale}/login`}
+                  className="px-6 py-2 rounded-btn bg-white/10 text-white text-sm font-medium hover:bg-white/20"
+                >
                   {t["signup.goLogin"]}
                 </Link>
               )}
               <button
                 type="button"
                 onClick={() => setSuccess(false)}
-                className="px-6 py-2 rounded-[50px] border border-white/20 text-drawsports-text-muted text-sm font-medium hover:bg-white/5"
+                className="px-6 py-2 rounded-btn border border-white/20 text-drawsports-text-muted text-sm font-medium hover:bg-white/5"
               >
                 {t["signup.close"]}
               </button>
@@ -96,7 +124,7 @@ export default function SignupPage() {
           </div>
         </div>
       )}
-      <a href={locale === "zh" ? "https://drawsports.app/zh/pro/" : locale === "ja" ? "https://drawsports.app/ja/pro/" : locale === "en" ? "https://drawsports.app/pro/en/" : "https://drawsports.app/pro/"} className="mb-8 block">
+      <a href={proHomeHref} className="mb-8 block">
         <Image
           src="/imagenes/logo.png"
           alt="DrawSports"
@@ -107,9 +135,7 @@ export default function SignupPage() {
       </a>
       <div className="w-full max-w-md">
         <div className="bg-drawsports-bg-card rounded-2xl p-8 border border-white/5 shadow-drawsports-card">
-          <h1 className="text-2xl font-bold text-white text-center mb-2">
-            {t["signup.title"]}
-          </h1>
+          <h1 className="text-2xl font-bold text-white text-center mb-2">{t["signup.title"]}</h1>
           <p className="text-drawsports-text-muted text-center text-sm mb-6">
             {t["signup.subtitle"]}
           </p>
@@ -127,7 +153,7 @@ export default function SignupPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-3 rounded-xl bg-[#1a0f0f] border border-white/10 text-white placeholder-white/40 focus:ring-2 focus:ring-drawsports-primary focus:border-drawsports-primary transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-drawsports-bg-dark border border-white/10 text-white placeholder-white/40 focus:ring-2 focus:ring-drawsports-primary focus:border-drawsports-primary transition-all"
                 placeholder="tu@email.com"
               />
             </div>
@@ -178,19 +204,17 @@ export default function SignupPage() {
                 value={teamName}
                 onChange={(e) => setTeamName(e.target.value)}
                 required
-                className="w-full px-4 py-3 rounded-xl bg-[#1a0f0f] border border-white/10 text-white placeholder-white/40 focus:ring-2 focus:ring-drawsports-primary focus:border-drawsports-primary transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-drawsports-bg-dark border border-white/10 text-white placeholder-white/40 focus:ring-2 focus:ring-drawsports-primary focus:border-drawsports-primary transition-all"
                 placeholder={t["signup.teamNamePlaceholder"]}
               />
             </div>
             {error && (
-              <p className="text-drawsports-primary text-sm font-medium">
-                {error}
-              </p>
+              <p className="text-drawsports-primary text-sm font-medium">{error}</p>
             )}
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 rounded-[50px] bg-drawsports-primary text-white font-bold shadow-drawsports-glow hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(255,23,68,0.5)] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none transition-all duration-200"
+              className="w-full py-4 rounded-btn bg-drawsports-primary text-white font-bold shadow-drawsports-glow hover:shadow-drawsports-glow disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none transition-all duration-200"
             >
               {loading ? t["signup.submitting"] : t["signup.submit"]}
             </button>
@@ -204,7 +228,7 @@ export default function SignupPage() {
         </div>
         <p className="mt-6 text-center">
           <a
-            href={locale === "zh" ? "https://drawsports.app/zh/pro/" : locale === "ja" ? "https://drawsports.app/ja/pro/" : locale === "en" ? "https://drawsports.app/pro/en/" : "https://drawsports.app/pro/"}
+            href={proHomeHref}
             className="text-drawsports-text-muted hover:text-white transition-colors text-sm"
           >
             ← {t.back}
