@@ -41,6 +41,9 @@ export async function middleware(request: NextRequest) {
   if (pathname === "/after-payment") {
     return NextResponse.redirect(new URL("/es/after-payment", request.url));
   }
+  // El panel ya no registra a nadie: la cuenta la crea la compra (webhook de
+  // Paddle) o una invitación del propietario. La redirección se mantiene por
+  // los enlaces antiguos.
   if (pathname === "/signup" || pathname === "/es/signup" || pathname === "/en/signup") {
     const locale = pathname === "/en/signup" ? "en" : "es";
     return NextResponse.redirect(new URL(`/${locale}/login`, request.url));
