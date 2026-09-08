@@ -8,6 +8,7 @@ import { EditableTeamName } from "./EditableTeamName";
 import Link from "next/link";
 import Image from "next/image";
 import { translations, type Locale } from "@/lib/translations";
+import { getDrawSportsPlansHref } from "@/lib/drawsports-links";
 import { PADDLE_PLANS, getPaddleCheckoutUrl } from "@/lib/paddle";
 
 function formatDate(date: Date, locale: string): string {
@@ -347,7 +348,9 @@ export default async function DashboardPage({
                 {t["dashboard.team.lead"]}
               </p>
               <a
-                href={`mailto:help@basketouch.com?subject=${encodeURIComponent(t["dashboard.team.mailSubject"])}`}
+                href={getDrawSportsPlansHref(safeLocale, email)}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-block mt-3 text-drawsports-primary text-sm font-medium hover:underline"
               >
                 {t["dashboard.team.cta"]} →
