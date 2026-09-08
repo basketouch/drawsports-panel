@@ -9,6 +9,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { translations, type Locale } from "@/lib/translations";
 import { LEMON_SQUEEZY_VARIANTS, getCheckoutUrl } from "@/lib/lemonsqueezy";
+import { PADDLE_PLANS, getPaddleCheckoutUrl } from "@/lib/paddle";
 
 function formatDate(date: Date, locale: string): string {
   if (typeof date?.getTime !== "function" || Number.isNaN(date.getTime())) return "—";
@@ -30,7 +31,7 @@ function daysBetween(from: Date, to: Date): number {
   return Math.floor(diff / (1000 * 60 * 60 * 24));
 }
 
-// Evitar caché: siempre datos frescos tras pago en Lemon Squeezy
+// Evitar caché: siempre datos frescos tras pago (Paddle webhook / Lemon Squeezy)
 export const dynamic = "force-dynamic";
 // Forzar Node.js (evita problemas con cookies/Edge en producción)
 export const runtime = "nodejs";
@@ -316,6 +317,34 @@ export default async function DashboardPage({
             <h3 className="text-drawsports-text-muted text-sm font-medium uppercase tracking-wider mb-4">
               {t["dashboard.choosePlan"]}
             </h3>
+            {/* Paddle (nuevo): pack Mac + iPad con la misma cuenta */}
+            <div className="grid sm:grid-cols-2 gap-4 mb-6">
+              {PADDLE_PLANS.map((p) => (
+                <a
+                  key={p.plan}
+                  href={getPaddleCheckoutUrl(p.plan, email, safeLocale)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`block p-5 rounded-xl border transition-all duration-200 text-center ${
+                    p.plan === "pack"
+                      ? "border-drawsports-primary shadow-drawsports-glow"
+                      : "border-white/10 hover:border-drawsports-primary hover:shadow-drawsports-glow"
+                  }`}
+                >
+                  <p className="text-white font-bold text-xl">{t[p.labelKey]}</p>
+                  <p className="text-drawsports-text-muted text-xs mt-1">{t[p.descKey]}</p>
+                  <p className="text-drawsports-primary font-bold text-lg mt-2">
+                    {p.price}/{t["dashboard.periodYear"]}
+                  </p>
+                  <p className="text-drawsports-primary text-sm font-medium mt-3">
+                    {t["dashboard.buyPlan"]} →
+                  </p>
+                </a>
+              ))}
+            </div>
+            <p className="text-drawsports-text-muted text-xs uppercase tracking-wider mb-3">
+              {t["dashboard.paddle.onlyDrawSports"]}
+            </p>
             <div className="grid sm:grid-cols-3 gap-4">
               {LEMON_SQUEEZY_VARIANTS.map((variant) => (
                 <a
