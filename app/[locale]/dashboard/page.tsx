@@ -8,7 +8,6 @@ import { EditableTeamName } from "./EditableTeamName";
 import Link from "next/link";
 import Image from "next/image";
 import { translations, type Locale } from "@/lib/translations";
-import { LEMON_SQUEEZY_VARIANTS, getCheckoutUrl } from "@/lib/lemonsqueezy";
 import { PADDLE_PLANS, getPaddleCheckoutUrl } from "@/lib/paddle";
 
 function formatDate(date: Date, locale: string): string {
@@ -31,7 +30,7 @@ function daysBetween(from: Date, to: Date): number {
   return Math.floor(diff / (1000 * 60 * 60 * 24));
 }
 
-// Evitar caché: siempre datos frescos tras pago (Paddle webhook / Lemon Squeezy)
+// Evitar caché: siempre datos frescos tras el pago (webhook de Paddle)
 export const dynamic = "force-dynamic";
 // Forzar Node.js (evita problemas con cookies/Edge en producción)
 export const runtime = "nodejs";
@@ -342,30 +341,17 @@ export default async function DashboardPage({
                 </a>
               ))}
             </div>
-            <p className="text-drawsports-text-muted text-xs uppercase tracking-wider mb-3">
-              {t["dashboard.paddle.onlyDrawSports"]}
-            </p>
-            <div className="grid sm:grid-cols-3 gap-4">
-              {LEMON_SQUEEZY_VARIANTS.map((variant) => (
-                <a
-                  key={variant.checkoutId}
-                  href={getCheckoutUrl(variant.checkoutId, email)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block p-5 rounded-xl border border-white/10 hover:border-drawsports-primary hover:shadow-drawsports-glow transition-all duration-200 text-center"
-                >
-                  <p className="text-white font-bold text-xl">{variant.users} {t["dashboard.users"]}</p>
-                  <p className="text-drawsports-primary font-bold text-lg mt-2">
-                    {variant.price}/{t["dashboard.periodYear"]}
-                  </p>
-                  <p className="text-drawsports-text-muted text-xs mt-1">
-                    {t["dashboard.subscriptionAnnual"]}
-                  </p>
-                  <p className="text-drawsports-primary text-sm font-medium mt-3">
-                    {t["dashboard.buyPlan"]} →
-                  </p>
-                </a>
-              ))}
+            <div className="rounded-xl border border-white/10 p-5">
+              <p className="text-white font-medium">{t["dashboard.team.title"]}</p>
+              <p className="text-drawsports-text-muted text-sm mt-1">
+                {t["dashboard.team.lead"]}
+              </p>
+              <a
+                href={`mailto:help@basketouch.com?subject=${encodeURIComponent(t["dashboard.team.mailSubject"])}`}
+                className="inline-block mt-3 text-drawsports-primary text-sm font-medium hover:underline"
+              >
+                {t["dashboard.team.cta"]} →
+              </a>
             </div>
           </div>
         )}

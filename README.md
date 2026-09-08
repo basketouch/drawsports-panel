@@ -92,7 +92,7 @@ El panel lee de la tabla `profiles` en Supabase:
 - `subscription_end` (timestamptz, opcional) - Fecha fin / renovación
 - `organization_id` (text, opcional)
 
-El webhook de Lemon Squeezy actualiza `is_pro`, `subscription_start` y `subscription_end` cuando el cliente paga. Ejecuta la migración `supabase/migrations/20250219_profiles_subscription_start.sql` si no tienes la columna.
+El webhook de Paddle (`paddle-webhook`) actualiza `is_pro`, `subscription_start` y `subscription_end` cuando el cliente paga, a través de la RPC `suite_sync_drawsports_access`. Ejecuta la migración `supabase/migrations/20250219_profiles_subscription_start.sql` si no tienes la columna.
 
 ## Seguridad
 
