@@ -18,7 +18,11 @@ import { getDrawSportsProHomeHref } from "@/lib/drawsports-links";
  * `shouldCreateUser: false` es deliberado: el panel no da de alta a nadie. La
  * cuenta la crea la compra (webhook de Paddle) o una invitación del propietario.
  */
-const CODE_LENGTH = 6;
+// Supabase permite configurar la longitud del código (este proyecto usa 8).
+// No la fijamos: aceptamos un rango y dejamos enviar a partir del mínimo, para
+// que un cambio de ese ajuste no vuelva a dejar el formulario sin poder rellenarse.
+const CODE_MIN = 6;
+const CODE_MAX = 10;
 const RESEND_SECONDS = 60;
 
 export default function LoginPage() {
@@ -201,18 +205,18 @@ export default function LoginPage() {
                   inputMode="numeric"
                   autoComplete="one-time-code"
                   pattern="[0-9]*"
-                  maxLength={CODE_LENGTH}
+                  maxLength={CODE_MAX}
                   value={code}
                   onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
                   required
-                  className={`${inputClass} text-center tracking-[0.5em] text-xl font-semibold`}
-                  placeholder="000000"
+                  className={`${inputClass} text-center tracking-[0.35em] text-xl font-semibold`}
+                  placeholder="00000000"
                 />
               </div>
               {error && <p className="text-drawsports-primary text-sm font-medium">{error}</p>}
               <button
                 type="submit"
-                disabled={loading || code.length < CODE_LENGTH}
+                disabled={loading || code.length < CODE_MIN}
                 className={buttonClass}
               >
                 {loading ? t["login.submitting"] : t["login.submit"]}
