@@ -325,7 +325,7 @@ export default async function DashboardPage({
               {t["dashboard.choosePlan"]}
             </h3>
             {/* Paddle (nuevo): pack Mac + iPad con la misma cuenta */}
-            <div className="grid sm:grid-cols-2 gap-4 mb-6">
+            <div className="grid gap-4 mb-6">
               {PADDLE_PLANS.map((p) => (
                 <a
                   key={p.plan}
