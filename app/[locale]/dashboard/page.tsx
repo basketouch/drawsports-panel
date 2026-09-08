@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/supabase/server";
 import { CheckCircle, XCircle, Calendar, Download, Mail, Zap, Users } from "lucide-react";
 import { LogoutButton } from "./LogoutButton";
+import { ManageSubscription } from "./ManageSubscription";
 import { ManageTeam } from "./ManageTeam";
 import { SetupTeamName } from "./SetupTeamName";
 import { EditableTeamName } from "./EditableTeamName";
@@ -283,6 +284,12 @@ export default async function DashboardPage({
                 <p className="text-drawsports-text-muted text-sm">—</p>
               )}
             </div>
+            {/* Solo el propietario paga; un miembro invitado no tiene nada que gestionar. */}
+            {!isMember && (
+              <div className="mt-auto pt-5">
+                <ManageSubscription email={email} locale={safeLocale} />
+              </div>
+            )}
           </div>
         </div>
 
