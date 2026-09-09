@@ -33,7 +33,7 @@ export const translations = {
     "login.error.tooMany": "Demasiados intentos. Espera un minuto y vuelve a probar.",
     "login.error.badCode": "El código no es válido o ha caducado. Pide uno nuevo.",
     "login.noPasswordHint": "Aquí no hace falta contraseña.",
-    "login.needPassword": "¿Necesitas una para la app de iPad?",
+    "login.ipadHint": "En la app de iPad es igual: mismo email y código.",
 
     // Signup
     "signup.title": "Crear cuenta",
@@ -189,7 +189,7 @@ export const translations = {
     "login.error.tooMany": "Too many attempts. Wait a minute and try again.",
     "login.error.badCode": "That code is invalid or expired. Ask for a new one.",
     "login.noPasswordHint": "No password needed here.",
-    "login.needPassword": "Need one for the iPad app?",
+    "login.ipadHint": "On the iPad app it works the same: same email and code.",
 
     // Signup
     "signup.title": "Create account",
@@ -345,7 +345,7 @@ export const translations = {
     "login.error.tooMany": "尝试次数过多。请稍等一分钟再试。",
     "login.error.badCode": "验证码无效或已过期，请重新获取。",
     "login.noPasswordHint": "这里不需要密码。",
-    "login.needPassword": "需要 iPad 应用的密码？",
+    "login.ipadHint": "iPad 应用相同：同一邮箱和验证码。",
 
     // Signup
     "signup.title": "创建账户",
@@ -498,7 +498,7 @@ export const translations = {
     "login.error.tooMany": "試行回数が多すぎます。1分ほど待って再試行してください。",
     "login.error.badCode": "コードが無効か期限切れです。新しいコードを取得してください。",
     "login.noPasswordHint": "ここではパスワードは不要です。",
-    "login.needPassword": "iPadアプリ用のパスワードが必要ですか？",
+    "login.ipadHint": "iPadアプリも同じです：同じメールとコード。",
     "login.forgot": "パスワードをお忘れですか？",
     "login.forgot.hint": "",
     "login.hasAccount": "すでにアカウントをお持ちですか？",

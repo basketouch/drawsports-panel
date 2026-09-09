@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/supabase/client";
 import { useParams, useSearchParams } from "next/navigation";
-import Link from "next/link";
 import Image from "next/image";
 import { translations, type Locale } from "@/lib/translations";
 import { getDrawSportsProHomeHref } from "@/lib/drawsports-links";
@@ -248,13 +247,7 @@ export default function LoginPage() {
           )}
 
           <p className="mt-6 text-center text-drawsports-text-muted text-xs leading-relaxed">
-            {t["login.noPasswordHint"]}{" "}
-            <Link
-              href={`/${locale}/forgot-password`}
-              className="text-drawsports-primary hover:underline"
-            >
-              {t["login.needPassword"]}
-            </Link>
+            {t["login.noPasswordHint"]} {t["login.ipadHint"]}
           </p>
         </div>
         <p className="mt-6 text-center">
