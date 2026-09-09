@@ -399,7 +399,7 @@ export default async function DashboardPage({
             {t["dashboard.download"]}
           </a>
           <a
-            href="mailto:info@basketouch.com"
+            href="mailto:help@basketouch.com"
             className="inline-flex items-center gap-2 px-5 py-3 rounded-btn border border-white/20 text-drawsports-text-muted font-medium hover:border-drawsports-primary hover:text-white transition-all duration-200"
           >
             <Mail className="w-5 h-5" />
@@ -412,10 +412,10 @@ export default async function DashboardPage({
             <p className="text-sm text-white">
               {t["dashboard.paid.hint"]}{" "}
               <a
-                href="mailto:info@basketouch.com"
+                href="mailto:help@basketouch.com"
                 className="font-bold text-drawsports-primary hover:underline"
               >
-                info@basketouch.com
+                help@basketouch.com
               </a>
             </p>
           </div>
