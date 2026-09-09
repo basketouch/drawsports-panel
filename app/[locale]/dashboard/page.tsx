@@ -10,6 +10,7 @@ import { EditableTeamName } from "./EditableTeamName";
 import Link from "next/link";
 import Image from "next/image";
 import { translations, type Locale } from "@/lib/translations";
+import { toPublicLocale } from "@/lib/public-locale";
 import { getDrawSportsPlansHref } from "@/lib/drawsports-links";
 import { PADDLE_PLANS, getPaddleCheckoutUrl } from "@/lib/paddle";
 
@@ -45,7 +46,8 @@ export default async function DashboardPage({
 }) {
   try {
     const { locale } = await params;
-    const safeLocale = (locale === "en" ? "en" : "es") as Locale;
+    const publicLocale = toPublicLocale(locale);
+    const safeLocale = (publicLocale === "en" ? "en" : "es") as Locale;
     const t = translations[safeLocale] ?? translations.es;
 
     const supabase = await createClient();
@@ -180,7 +182,7 @@ export default async function DashboardPage({
             <span>{t["dashboard.title"]}</span>
           </Link>
           <div className="site-nav">
-            <DashboardHeaderActions locale={safeLocale} />
+            <DashboardHeaderActions locale={publicLocale} />
             <LogoutButton locale={safeLocale} />
           </div>
         </div>

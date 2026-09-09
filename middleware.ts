@@ -48,6 +48,16 @@ export async function middleware(request: NextRequest) {
     const locale = pathname === "/en/signup" ? "en" : "es";
     return NextResponse.redirect(new URL(`/${locale}/login`, request.url));
   }
+  // OTP en panel: ya no hay contraseña ni recuperación.
+  if (
+    pathname === "/forgot-password" ||
+    pathname === "/es/forgot-password" ||
+    pathname === "/en/forgot-password" ||
+    pathname === "/update-password"
+  ) {
+    const locale = pathname.startsWith("/en") ? "en" : "es";
+    return NextResponse.redirect(new URL(`/${locale}/login`, request.url));
+  }
   if (pathname === "/dashboard") {
     return NextResponse.redirect(new URL("/es/dashboard", request.url));
   }

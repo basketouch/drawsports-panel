@@ -1,6 +1,6 @@
 import { getDrawSportsHomeHref } from "@/lib/drawsports-links";
 
-type Locale = "es" | "en";
+import type { PublicLocale } from "@/lib/public-locale";
 
 const copy = {
   es: {
@@ -21,7 +21,7 @@ const copy = {
   },
 } as const;
 
-export function SiteFooter({ locale }: { locale: Locale }) {
+export function SiteFooter({ locale }: { locale: PublicLocale }) {
   const t = copy[locale];
   const home = getDrawSportsHomeHref(locale);
   const terms =

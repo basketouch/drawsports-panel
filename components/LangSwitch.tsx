@@ -3,14 +3,14 @@
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 
+import type { PublicLocale } from "@/lib/public-locale";
+
 const LOCALES = [
   { locale: "es", label: "ES", title: "Español" },
   { locale: "en", label: "EN", title: "English" },
 ] as const;
 
-type Locale = (typeof LOCALES)[number]["locale"];
-
-export function LangSwitch({ locale }: { locale: Locale }) {
+export function LangSwitch({ locale }: { locale: PublicLocale }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const pathWithoutLocale = pathname?.replace(/^\/(es|en)/, "") || "/login";

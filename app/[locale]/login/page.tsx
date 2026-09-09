@@ -41,12 +41,6 @@ function LoginForm() {
   }, [searchParams]);
 
   useEffect(() => {
-    if (searchParams.get("success") === "password_created") {
-      setSuccessMessage(t["login.passwordCreated"]);
-    }
-  }, [searchParams, t]);
-
-  useEffect(() => {
     if (secondsLeft <= 0) return;
     const id = window.setTimeout(() => setSecondsLeft((s) => s - 1), 1000);
     return () => window.clearTimeout(id);

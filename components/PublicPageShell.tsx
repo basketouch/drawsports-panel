@@ -4,13 +4,13 @@ import { Suspense, type ReactNode } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
-type Locale = "es" | "en";
+import type { PublicLocale } from "@/lib/public-locale";
 
 export function PublicPageShell({
   locale,
   children,
 }: {
-  locale: Locale;
+  locale: PublicLocale;
   children: ReactNode;
 }) {
   return (

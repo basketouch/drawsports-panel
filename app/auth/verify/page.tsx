@@ -9,7 +9,7 @@ function AuthVerifyContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
-  const next = searchParams.get("next") ?? "/update-password";
+  const next = searchParams.get("next") ?? "/es/dashboard";
 
   useEffect(() => {
     const supabase = createClient();

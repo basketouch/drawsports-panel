@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { getDrawSportsHomeHref, getDrawSportsPlansHref } from "@/lib/drawsports-links";
 import { LangSwitch } from "@/components/LangSwitch";
 
-type Locale = "es" | "en";
+import type { PublicLocale } from "@/lib/public-locale";
 
 const copy = {
   es: {
@@ -21,7 +21,7 @@ const copy = {
   },
 } as const;
 
-export function SiteHeader({ locale }: { locale: Locale }) {
+export function SiteHeader({ locale }: { locale: PublicLocale }) {
   const pathname = usePathname();
   const t = copy[locale];
   const isLogin = pathname?.includes("/login");

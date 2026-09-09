@@ -129,11 +129,11 @@ export const translations = {
     "setup.teamName.saving": "Guardando…",
 
     "afterPayment.title": "¡Gracias por tu compra!",
-    "afterPayment.subtitle": "Te hemos enviado un email para activar tu cuenta y crear tu contraseña.",
-    "afterPayment.checkEmail": "Revisa tu bandeja de entrada (y la carpeta de spam).",
-    "afterPayment.alreadyActive": "¿Ya activaste tu cuenta?",
+    "afterPayment.subtitle": "Tu licencia ya está activa. Entra con el mismo email de la compra.",
+    "afterPayment.checkEmail": "Te enviaremos un código de acceso por correo (revisa el spam).",
+    "afterPayment.alreadyActive": "Entra al panel",
     "afterPayment.login": "Iniciar sesión",
-    "afterPayment.loginHint": "Cuando hayas activado tu cuenta desde el email y creado tu contraseña, inicia sesión aquí.",
+    "afterPayment.loginHint": "Escribe tu email y pulsa Enviar código. No hace falta contraseña.",
 
     "msg.inviteRevoked": "Invitación revocada",
     "msg.seatOccupied": "Plaza ocupada",
@@ -285,11 +285,11 @@ export const translations = {
     "setup.teamName.saving": "Saving…",
 
     "afterPayment.title": "Thank you for your purchase!",
-    "afterPayment.subtitle": "We've sent you an email to activate your account and create your password.",
-    "afterPayment.checkEmail": "Check your inbox (and spam folder).",
-    "afterPayment.alreadyActive": "Already activated your account?",
+    "afterPayment.subtitle": "Your licence is active. Sign in with the same email you used to buy.",
+    "afterPayment.checkEmail": "We will email you a sign-in code (check spam).",
+    "afterPayment.alreadyActive": "Go to the panel",
     "afterPayment.login": "Sign in",
-    "afterPayment.loginHint": "Once you've activated your account from the email and created your password, sign in here.",
+    "afterPayment.loginHint": "Enter your email and tap Send code. No password needed.",
 
     "msg.inviteRevoked": "Invitation revoked",
     "msg.seatOccupied": "Seat occupied",
