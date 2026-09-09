@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/supabase/server";
 import { CheckCircle, XCircle, Calendar, Download, Mail, Zap, Users } from "lucide-react";
 import { LogoutButton } from "./LogoutButton";
+import { DashboardHeaderActions } from "./DashboardHeaderActions";
 import { ManageSubscription } from "./ManageSubscription";
 import { ManageTeam } from "./ManageTeam";
 import { SetupTeamName } from "./SetupTeamName";
@@ -166,19 +167,22 @@ export default async function DashboardPage({
 
   return (
     <div className="min-h-screen bg-drawsports-bg-dark">
-      <header className="bg-drawsports-bg-card border-b border-white/5">
-        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href={`/${locale}/dashboard`} className="flex items-center gap-3">
+      <header className="site-header">
+        <div className="site-container-wide max-w-4xl">
+          <Link href={`/${locale}/dashboard`} className="site-brand">
             <Image
-              src="/imagenes/logo.png"
+              src="/imagenes/logo-header.webp"
               alt="DrawSports"
               width={40}
               height={40}
-              className="rounded-[22%]"
+              className="site-brand-logo"
             />
-            <span className="text-xl font-bold text-white">{t["dashboard.title"]}</span>
+            <span>{t["dashboard.title"]}</span>
           </Link>
-          <LogoutButton locale={safeLocale} />
+          <div className="site-nav">
+            <DashboardHeaderActions locale={safeLocale} />
+            <LogoutButton locale={safeLocale} />
+          </div>
         </div>
       </header>
 

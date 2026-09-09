@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { Suspense, useState, useEffect, useRef } from "react";
 import { createClient } from "@/supabase/client";
 import { useParams, useSearchParams } from "next/navigation";
-import Image from "next/image";
 import { translations, type Locale } from "@/lib/translations";
-import { getDrawSportsProHomeHref } from "@/lib/drawsports-links";
+import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 
 /**
  * Acceso sin contraseña: escribes tu email y entras con un código de un solo uso.
@@ -17,14 +17,11 @@ import { getDrawSportsProHomeHref } from "@/lib/drawsports-links";
  * `shouldCreateUser: false` es deliberado: el panel no da de alta a nadie. La
  * cuenta la crea la compra (webhook de Paddle) o una invitación del propietario.
  */
-// Supabase permite configurar la longitud del código (este proyecto usa 8).
-// No la fijamos: aceptamos un rango y dejamos enviar a partir del mínimo, para
-// que un cambio de ese ajuste no vuelva a dejar el formulario sin poder rellenarse.
 const CODE_MIN = 6;
 const CODE_MAX = 10;
 const RESEND_SECONDS = 60;
 
-export default function LoginPage() {
+function LoginForm() {
   const params = useParams();
   const searchParams = useSearchParams();
   const locale = (params?.locale as Locale) || "es";
@@ -38,6 +35,11 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(0);
   const codeInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const emailParam = (searchParams.get("email") || "").trim().toLowerCase();
+    if (emailParam) setEmail(emailParam);
+  }, [searchParams]);
 
   useEffect(() => {
     if (searchParams.get("success") === "password_created") {
@@ -130,23 +132,13 @@ export default function LoginPage() {
     }
   }
 
-  const proHomeHref = getDrawSportsProHomeHref(locale);
   const inputClass =
     "w-full px-4 py-3 rounded-xl bg-drawsports-bg-dark border border-white/10 text-white placeholder-white/40 focus:ring-2 focus:ring-drawsports-primary focus:border-drawsports-primary transition-all";
   const buttonClass =
     "w-full py-4 rounded-btn bg-drawsports-primary text-white font-bold shadow-drawsports-glow hover:shadow-drawsports-glow disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none transition-all duration-200";
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-drawsports-bg-dark px-4">
-      <a href={proHomeHref} className="mb-8 block">
-        <Image
-          src="/imagenes/logo.png"
-          alt="DrawSports"
-          width={80}
-          height={80}
-          className="rounded-[22%] shadow-drawsports-card"
-        />
-      </a>
+    <main className="flex-1 flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-md">
         <div className="bg-drawsports-bg-card rounded-2xl p-8 border border-white/5 shadow-drawsports-card">
           <h1 className="text-2xl font-bold text-white text-center mb-2">{t["login.title"]}</h1>
@@ -250,15 +242,24 @@ export default function LoginPage() {
             {t["login.noPasswordHint"]} {t["login.ipadHint"]}
           </p>
         </div>
-        <p className="mt-6 text-center">
-          <a
-            href={proHomeHref}
-            className="text-drawsports-text-muted hover:text-white transition-colors text-sm"
-          >
-            ← {t.back}
-          </a>
-        </p>
       </div>
+    </main>
+  );
+}
+
+export default function LoginPage() {
+  const params = useParams();
+  const locale = ((params?.locale as Locale) || "es") === "en" ? "en" : "es";
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Suspense fallback={<div className="site-header min-h-[72px]" aria-hidden />}>
+        <SiteHeader locale={locale} />
+      </Suspense>
+      <Suspense fallback={null}>
+        <LoginForm />
+      </Suspense>
+      <SiteFooter locale={locale} />
     </div>
   );
 }

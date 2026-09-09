@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import { type Locale } from "@/lib/translations";
-import { LanguageSelector } from "@/components/LanguageSelector";
 
 const locales: Locale[] = ["es", "en"];
 
@@ -17,10 +16,5 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!locales.includes(locale as Locale)) notFound();
 
-  return (
-    <>
-      <LanguageSelector />
-      {children}
-    </>
-  );
+  return <>{children}</>;
 }
