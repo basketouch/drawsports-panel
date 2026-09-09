@@ -4,8 +4,7 @@ import { Suspense, useState, useEffect, useRef } from "react";
 import { createClient } from "@/supabase/client";
 import { useParams, useSearchParams } from "next/navigation";
 import { translations, type Locale } from "@/lib/translations";
-import { SiteHeader } from "@/components/SiteHeader";
-import { SiteFooter } from "@/components/SiteFooter";
+import { PublicPageShell } from "@/components/PublicPageShell";
 
 /**
  * Acceso sin contraseña: escribes tu email y entras con un código de un solo uso.
@@ -252,14 +251,10 @@ export default function LoginPage() {
   const locale = ((params?.locale as Locale) || "es") === "en" ? "en" : "es";
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Suspense fallback={<div className="site-header min-h-[72px]" aria-hidden />}>
-        <SiteHeader locale={locale} />
-      </Suspense>
+    <PublicPageShell locale={locale}>
       <Suspense fallback={null}>
         <LoginForm />
       </Suspense>
-      <SiteFooter locale={locale} />
-    </div>
+    </PublicPageShell>
   );
 }
