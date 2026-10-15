@@ -37,6 +37,7 @@ export const PADDLE_PLANS: ReadonlyArray<{
 
 export function getPaddleCheckoutUrl(plan: PaddlePlan, email: string, locale: string): string {
   const base = locale === "es" ? PRICING_BASE : `https://cutsports.app/en/pricing/`;
-  const params = new URLSearchParams({ plan, email });
+  // Las marcas UTM permiten ver en el Hub cuántas compras salen del panel (campaña «Panel DrawSports»).
+  const params = new URLSearchParams({ plan, email, utm_source: "drawsports", utm_medium: "panel", utm_campaign: "panel_pack" });
   return `${base}?${params.toString()}`;
 }
